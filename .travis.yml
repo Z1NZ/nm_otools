@@ -5,10 +5,15 @@ sudo: required
 
 before_install:
   - pip install --upgrade pip
-  - pip install pytest
 
 install:
+  - pip install pytest
+
+build:
   - make
 
 script:
   - py.test .
+
+notifications:
+  email: false
