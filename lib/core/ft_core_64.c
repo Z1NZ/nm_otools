@@ -70,6 +70,7 @@ void	ft_put_out_test(unsigned long nsyms, unsigned long symoff, unsigned long st
 		}
 		else if ((tab[i].n_type & N_TYPE) || tab[i].n_type & N_EXT)
 		{
+			
 			if (tab[i].n_value)
 				pri_addr(tab[i].n_value);
 			else

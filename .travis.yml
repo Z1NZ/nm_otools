@@ -1,0 +1,16 @@
+os:
+  - osx
+language: python
+
+sudo: required
+
+before_install:
+  - pip install --upgrade pip
+  - pip install pytest
+
+install:
+  - make
+  - py.test .
+
+script:
+  - py.test .
