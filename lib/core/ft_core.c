@@ -7,12 +7,12 @@ void	ft_core(char *ptr)
 	magic_number = *(uint32_t *)((void *)ptr);
 	if (magic_number == MH_MAGIC)
 	{
-		printf("%s\n", "binary 32bit");
+		// printf("%s\n", "binary 32bit");
 		ft_core_32(ptr);
 	}
 	else if (magic_number == MH_MAGIC_64)
 	{
-		printf("%s\n", "binary 64bit");
+		// printf("%s\n", "binary 64bit");
 		ft_core_64(ptr);
 	}
 }

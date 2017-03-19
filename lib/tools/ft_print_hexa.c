@@ -17,11 +17,15 @@ void			pri_addr(unsigned long long number)
 		number /= 16;
 		i++;
 	}
+	while(i < 16)
+	{
+		addr[i] = '0';
+		i++;
+	}
 	addr[16] = '\0';
-	ft_putstr(addr);
-	// while (i > -1)
-	// {
-	// 	write(1, &addr[i], 1);
-	// 	i--;
-	// }
+	while (i > -1)
+	{
+		write(1, &addr[i], 1);
+		i--;
+	}
 }

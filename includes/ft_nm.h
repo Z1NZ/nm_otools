@@ -24,6 +24,8 @@ void	ft_core_mmap(int fd, struct stat *buff);
 /*
 ** TOOLS
 */
+char	ft_islower(char c);
+char	ft_toupper(char c);
 void	ft_putnbr(int n);
 void	pri_addr(unsigned long long number);
 void	ft_put_n_char(char *ptr, size_t nb);
