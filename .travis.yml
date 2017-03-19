@@ -4,9 +4,9 @@ os:
 language: python
 
 sudo: required
-python:
-  - "2.6"
+
 before_install:
+  - brew install python
   - pip install --upgrade pip
   - pip install pytest
 
