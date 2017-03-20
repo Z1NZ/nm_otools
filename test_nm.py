@@ -4,8 +4,8 @@ import os
 import subprocess
 
 def test_myoutput1(capsys): # or use "capfd" for fd-level
-	str1 = os.system("./ft_nm ls")
-	str2 = os.system("nm ls")
+	str1 = os.system("./ft_nm")
+	str2 = os.system("nm ")
 	assert str1 == str2
 
 
