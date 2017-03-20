@@ -1,7 +1,7 @@
 #include "ft_nm.h"
 #include <unistd.h>
 
-void			pri_addr(unsigned long long number)
+void			ft_print_hexa(unsigned long long number)
 {
 	static char	base[] = "0123456789abcdef";
 	int			current_rest;
@@ -22,10 +22,6 @@ void			pri_addr(unsigned long long number)
 		addr[i] = '0';
 		i++;
 	}
-	addr[16] = '\0';
-	while (i > -1)
-	{
+	while (--i > -1)
 		write(1, &addr[i], 1);
-		i--;
-	}
 }

@@ -12,7 +12,6 @@ static char type_nb(uint8_t i)
 		return ('b');
 	else if (i == 9)
 		return ('d');
-	ft_putnbr(i);
 	return ('s');
 	// return ' ';
 }
@@ -30,7 +29,6 @@ static char	get_type_64(struct nlist_64 *sym)
 			return 'A';
 		if ((sym->n_type & N_TYPE) == N_INDR)
 			return 'I';
-		ft_putnbr(sym->n_type);
 		return ' ';
 	}
 	else
@@ -44,17 +42,20 @@ static char	get_type_64(struct nlist_64 *sym)
 			return 'a';
 		if ((sym->n_type & N_TYPE) == N_INDR)
 			return 'i';
-		ft_putnbr(sym->n_type);
 		return ' ';
 	}
 }
 
 void	ft_put_out_test(unsigned long nsyms, unsigned long symoff, unsigned long stroff, char *ptr)
 {
-	char 							*string;
-	struct nlist_64					*tab;
-	unsigned long					i;
+	char 						*string;
+	struct nlist_64				*tab;
+	unsigned long				i;
+	t_list						*p_list;
+	t_list						*h_list;
 
+	p_list = NULL;
+	h_list = NULL;
 	tab = (void *)((char *)ptr + symoff);
 	string = ptr + stroff;
 	i = 0;
@@ -70,23 +71,24 @@ void	ft_put_out_test(unsigned long nsyms, unsigned long symoff, unsigned long st
 		}
 		else if ((tab[i].n_type & N_TYPE) || tab[i].n_type & N_EXT)
 		{
-			
-			if (tab[i].n_value)
-				pri_addr(tab[i].n_value);
-			else
-				write(1, "                ", 16);
-			write(1," ", 1);
-			if ((tab[i].n_type & N_TYPE) || tab[i].n_type & N_EXT)
+			if (p_list == NULL)
 			{
-				char c = get_type_64(&tab[i]);
-				write(1, &c, 1);
-				write(1, " ", 1);
-				ft_putstr(string + tab[i].n_un.n_strx);
-				ft_putstr("\n");
+				p_list = ft_memalloc(sizeof(t_list));
+				h_list = p_list;
 			}
+			else
+			{	
+				p_list->next = ft_memalloc(sizeof(t_list));
+				p_list = p_list->next;
+			}
+			p_list->n_value = tab[i].n_value;
+			p_list->type = get_type_64(&tab[i]);
+			p_list->ptr = string + tab[i].n_un.n_strx;
 		}
 		i++;
 	}
+		sort_list(h_list);
+		simple_print(h_list);
 }
 
 void	ft_core_64(char *ptr)
