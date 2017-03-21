@@ -16,6 +16,7 @@ typedef struct		s_list
 }					t_list;
 
 void	ft_put_out_test(unsigned long nsyms, unsigned long symoff, unsigned long stroff, char *ptr);
+void	ft_nlist(unsigned long nsyms, unsigned long symoff, unsigned long stroff, char *ptr);
 void    ft_openner(char *argv);
 
 
@@ -25,7 +26,8 @@ void    ft_openner(char *argv);
 /*
 ** 	PRINTER
 */
-void	simple_print(t_list *ptr);
+void	simple_print_64(t_list *ptr);
+void	simple_print_32(t_list *ptr);
 
 /*
 ** CORE
@@ -39,6 +41,8 @@ void	ft_core_mmap(int fd, struct stat *buff);
 /*
 ** TOOLS
 */
+char	get_type(struct nlist *sym);
+char	get_type_64(struct nlist_64 *sym);
 int		ft_strcmp(char *s1, char *s2);
 void	sort_list(t_list *ptr);
 void	ft_list_swap(t_list *a, t_list *b);
@@ -47,7 +51,8 @@ void	*ft_memalloc(size_t size);
 char	ft_islower(char c);
 char	ft_toupper(char c);
 void	ft_putnbr(int n);
-void	ft_print_hexa(unsigned long long number);
+void	ft_print_hexa_64(unsigned long long number);
+void	ft_print_hexa_32(unsigned long number);
 void	ft_put_n_char(char *ptr, size_t nb);
 void	ft_error_st_mode(mode_t st_mode, char *name);
 void	ft_error_errno(char * ptr, char *name);
