@@ -4,6 +4,7 @@
 #include <string.h>
 #include <mach-o/loader.h>
 #include <mach-o/nlist.h>
+#include <mach-o/fat.h>
 #include <stdio.h>// printf("%s\n", );
 
 typedef struct		s_list
@@ -34,6 +35,7 @@ void	simple_print_32(t_list *ptr);
 */
 
 void	ft_core(char *ptr);
+void	ft_core_32_litle(char *ptr);
 void	ft_core_64(char *ptr);
 void	ft_core_32(char *ptr);
 void	ft_core_mmap(int fd, struct stat *buff);
