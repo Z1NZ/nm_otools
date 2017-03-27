@@ -9,7 +9,7 @@ void	ft_core_mmap(int fd, struct stat *buff)
 		ft_error_errno("ft_core mmap", NULL);
 		return ;
 	}
-	ft_core(ptr, (size_t)buff->st_size);
+	ft_core(ptr);
 	if (munmap(ptr, (size_t)buff->st_size) == -1)
 	{
 		(ft_error_errno("ft_core munmap", NULL));

@@ -1,9 +1,8 @@
 #include "ft_nm.h"
 
-void	ft_core(char *ptr, size_t len)
+void	ft_core(char *ptr)
 {
 	uint32_t  magic_number;
-	char *tmp;
 
 	magic_number = *(uint32_t *)((void *)ptr);
 
@@ -16,15 +15,12 @@ void	ft_core(char *ptr, size_t len)
 	else if (magic_number == MH_CIGAM)//little endian
 	{
 		ft_putstr("test MH_CIGAM\n");
-		tmp = reverse(ptr, len);
-		ft_core_32(tmp);
 	}
 	else if (magic_number == MH_MAGIC_64) //big endian
 		ft_core_64(ptr);
 	else if (magic_number == MH_CIGAM_64)//little endian
 	{
 		ft_putstr("test MH_CIGAM_64\n");
-		tmp = reverse(ptr, len);
 		ft_core_64(ptr);		
 	}
 	else if (magic_number == FAT_MAGIC) //big endian
