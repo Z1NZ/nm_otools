@@ -1,5 +1,4 @@
 #include "ft_nm.h"
-#include <elf.h>
 
 void	ft_core(char *ptr)
 {
