@@ -43,6 +43,11 @@ def test_myoutput7(capsys):
 	assert str1 == str2
 
 def test_myoutput8(capsys):
-	str1 = os.system("./ft_nm ./nm-otool-tests/test_32")
-	str2 = os.system("nm ./nm-otool-tests/test_32")
+	str1 = os.system("./ft_nm ./nm-otool-tests/object_easy")
+	str2 = os.system("nm ./nm-otool-tests/object_easy")
+	assert str1 == str2
+
+def test_myoutput9(capsys):
+	str1 = os.system("./ft_nm ./nm-otool-tests/object_medium")
+	str2 = os.system("nm ./nm-otool-tests/object_medium")
 	assert str1 == str2

@@ -34,8 +34,7 @@ void	simple_print_32(t_list *ptr);
 ** CORE
 */
 
-void	ft_core(char *ptr);
-void	ft_core_32_litle(char *ptr);
+void	ft_core(char *ptr, size_t len);
 void	ft_core_64(char *ptr);
 void	ft_core_32(char *ptr);
 void	ft_core_mmap(int fd, struct stat *buff);
@@ -43,6 +42,9 @@ void	ft_core_mmap(int fd, struct stat *buff);
 /*
 ** TOOLS
 */
+char		*ft_strrev(char *str);
+void	*ft_memcpy(void *s1, const void *s2, size_t n);
+void	*reverse(char *ptr, size_t len);
 char	get_type(struct nlist *sym);
 char	get_type_64(struct nlist_64 *sym);
 int		ft_strcmp(char *s1, char *s2);

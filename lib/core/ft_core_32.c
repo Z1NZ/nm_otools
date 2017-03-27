@@ -41,32 +41,6 @@ void	ft_nlist(unsigned long nsyms, unsigned long symoff, unsigned long stroff, c
 	sort_list(h_list);
 	simple_print_32(h_list);
 }
-void	ft_core_32_litle(char *ptr)
-{
-
-	struct mach_header			*p_h;
-	struct load_command 		*p_lc;
-	struct symtab_command		*p_sync;
-	uint32_t					i;
-
-	p_h = (void *)ptr;
-	i = 0;
-	p_lc = (struct load_command *)(p_h + 1);
-	while(i < p_h->sizeofcmds)
-	{
-		ft_putnbr((int)p_lc->cmd);
-		ft_putstr("\n");
-		if (p_lc->cmd == LC_SYMTAB)
-		{
-			p_sync = (void*)p_lc;
-			ft_nlist(p_sync->nsyms, p_sync->symoff, p_sync->stroff, ptr);
-			break;
-		}
-		p_lc = (void *)(((char *)p_lc) + p_lc->cmdsize);
-		++i;
-	}
-}
-
 
 void	ft_core_32(char *ptr)
 {
