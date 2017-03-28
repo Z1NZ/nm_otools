@@ -3,7 +3,7 @@
      #include <unistd.h>
 
 
-void	ft_nlist(unsigned long nsyms, unsigned long symoff, unsigned long stroff, char *ptr)
+static inline void	ft_nlist(unsigned long nsyms, unsigned long symoff, unsigned long stroff, char *ptr)
 {
 	char 						*string;
 	struct nlist				*tab;
@@ -38,8 +38,11 @@ void	ft_nlist(unsigned long nsyms, unsigned long symoff, unsigned long stroff, c
 		}
 		i++;
 	}
-	sort_list(h_list);
-	simple_print_32(h_list);
+	if (h_list)
+	{
+		sort_list(h_list);
+		simple_print_32(h_list);
+	}
 }
 
 void	ft_core_32(char *ptr)

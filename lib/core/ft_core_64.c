@@ -37,8 +37,11 @@ void	ft_put_out_test(unsigned long nsyms, unsigned long symoff, unsigned long st
 		}
 		i++;
 	}
+	if (h_list)
+	{
 		sort_list(h_list);
 		simple_print_64(h_list);
+	}
 }
 
 void	ft_core_64(char *ptr)

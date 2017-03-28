@@ -17,7 +17,7 @@ typedef struct		s_list
 }					t_list;
 
 void	ft_put_out_test(unsigned long nsyms, unsigned long symoff, unsigned long stroff, char *ptr);
-void	ft_nlist(unsigned long nsyms, unsigned long symoff, unsigned long stroff, char *ptr);
+// void	ft_nlist(unsigned long nsyms, unsigned long symoff, unsigned long stroff, char *ptr);
 void    ft_openner(char *argv);
 
 
