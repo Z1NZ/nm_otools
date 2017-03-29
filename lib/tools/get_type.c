@@ -11,7 +11,6 @@ static char type_nb_64(uint8_t i)
 	else if (i == 9)
 		return ('d');
 	return ('s');
-	// return ' ';
 }
 
 static char type_nb_32(uint8_t i)
@@ -23,7 +22,6 @@ static char type_nb_32(uint8_t i)
 	else if (i == 5 || i == 14)
 		return ('b');
 	return ('s');
-	// return ' ';
 }
 
 char	get_type_64(struct nlist_64 *sym)

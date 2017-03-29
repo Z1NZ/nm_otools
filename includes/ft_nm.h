@@ -16,8 +16,6 @@ typedef struct		s_list
 	struct s_list	*next;
 }					t_list;
 
-void	ft_put_out_test(unsigned long nsyms, unsigned long symoff, unsigned long stroff, char *ptr);
-// void	ft_nlist(unsigned long nsyms, unsigned long symoff, unsigned long stroff, char *ptr);
 void    ft_openner(char *argv);
 
 
@@ -43,6 +41,8 @@ void	ft_core_mmap(int fd, struct stat *buff);
 /*
 ** TOOLS
 */
+void	ft_free_list(t_list *head);
+void	ft_free_list_litle(t_list *head);
 char	*ft_strdup(const char *s1);
 char	*ft_strcpy(char *s1, const char *s2);
 char	*ft_strrev(char *str);

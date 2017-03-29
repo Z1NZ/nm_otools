@@ -2,7 +2,7 @@
 #include "ft_nm.h"
 #include <unistd.h>
 
-void	ft_put_out_test(unsigned long nsyms, unsigned long symoff, unsigned long stroff, char *ptr)
+static inline void	ft_put_out(unsigned long nsyms, unsigned long symoff, unsigned long stroff, char *ptr)
 {
 	char 						*string;
 	struct nlist_64				*tab;
@@ -23,12 +23,14 @@ void	ft_put_out_test(unsigned long nsyms, unsigned long symoff, unsigned long st
 		{
 			if (p_list == NULL)
 			{
-				p_list = ft_memalloc(sizeof(t_list));
+				if (p_list = ft_memalloc(sizeof(t_list)) == NULL)
+					ft_error_errno("ft_memalloc", NULL)
 				h_list = p_list;
 			}
 			else
 			{	
-				p_list->next = ft_memalloc(sizeof(t_list));
+				if (p_list->next = ft_memalloc(sizeof(t_list)) == NULL)
+					ft_error_errno("ft_memalloc", NULL)
 				p_list = p_list->next;
 			}
 			p_list->n_value = tab[i].n_value;
@@ -41,6 +43,7 @@ void	ft_put_out_test(unsigned long nsyms, unsigned long symoff, unsigned long st
 	{
 		sort_list(h_list);
 		simple_print_64(h_list);
+		ft_free_list(h_list);
 	}
 }
 
@@ -59,7 +62,7 @@ void	ft_core_64(char *ptr)
  		if (p_lc->cmd == LC_SYMTAB)
  		{
  			p_sync = (void*)p_lc;
- 			ft_put_out_test(p_sync->nsyms, p_sync->symoff, p_sync->stroff, ptr);
+ 			ft_put_out(p_sync->nsyms, p_sync->symoff, p_sync->stroff, ptr);
  			break;
  		}
  		p_lc = (void *)(((char *)p_lc) + p_lc->cmdsize);

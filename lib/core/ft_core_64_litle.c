@@ -12,7 +12,7 @@ static inline void endian_swap(unsigned int* x)
 static void	ft_nlist(unsigned int nsyms, unsigned int symoff, unsigned int stroff, char *ptr)
 {
 	char 						*string;
-	struct nlist				*tab;
+	struct nlist_64				*tab;
 	unsigned long				i;
 	t_list						*p_list;
 	t_list						*h_list;
@@ -61,9 +61,9 @@ static void	ft_nlist(unsigned int nsyms, unsigned int symoff, unsigned int strof
 	}
 }
 
-void	ft_core_32_litle(char *ptr)
+void	ft_core_64_litle(char *ptr)
 {
-	struct mach_header			*p_h;
+	struct mach_header_64		*p_h;
 	struct load_command 		*p_lc;
 	struct symtab_command		*p_sync;
 	uint32_t					i;

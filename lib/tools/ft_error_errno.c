@@ -1,4 +1,3 @@
-
 #include "ft_nm.h"
 #include <errno.h>
 #include <stdio.h>
