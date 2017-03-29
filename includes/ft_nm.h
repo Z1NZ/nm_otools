@@ -43,6 +43,8 @@ void	ft_core_mmap(int fd, struct stat *buff);
 /*
 ** TOOLS
 */
+char	*ft_strdup(const char *s1);
+char	*ft_strcpy(char *s1, const char *s2);
 char	*ft_strrev(char *str);
 void	*ft_memcpy(void *s1, const void *s2, size_t n);
 void	*reverse(char *ptr, size_t len);

@@ -16,6 +16,7 @@ static void	ft_nlist(unsigned int nsyms, unsigned int symoff, unsigned int strof
 	unsigned long				i;
 	t_list						*p_list;
 	t_list						*h_list;
+	unsigned int				tmp;
 
 	p_list = NULL;
 	h_list = NULL;
@@ -27,11 +28,12 @@ static void	ft_nlist(unsigned int nsyms, unsigned int symoff, unsigned int strof
 	printf("nsyms[%u] symoff[%u] stroff[%u]\n", nsyms, symoff, stroff);
 	// exit(-1);
 	tab = (void *)((char *)ptr + symoff);
-	string = ptr + symoff;
+	string = ptr + stroff;
 	i = 0;
 	while(i < nsyms)
 	{
 		printf("%lu\n", i);
+
 		if (tab[i].n_type & N_STAB)
 			 ;
 		else if ((tab[i].n_type & N_TYPE) || tab[i].n_type & N_EXT)
@@ -47,13 +49,17 @@ static void	ft_nlist(unsigned int nsyms, unsigned int symoff, unsigned int strof
 				p_list = p_list->next;
 			}
 			p_list->n_value = tab[i].n_value;
-			p_list->type = get_type(&tab[i]);
-			p_list->ptr = string + tab[i].n_un.n_strx;
-
+			endian_swap((unsigned int *)&(p_list->n_value));
+			p_list->type = 'Z';//get_type_litle(&tab[i]);
+			tmp	= tab[i].n_un.n_strx;
+			endian_swap(&tmp);
+			p_list->ptr = ft_strdup(string + tmp);
+			reverse(p_list->ptr, ft_strlen(p_list->ptr));
+			// p_list->ptr = ft_strrev(p_list->ptr);
 		}
 		i++;
 	}
-	sort_list(h_list);
+	// sort_list(h_list);
 	printf("%s\n", "test");
 	simple_print_32(h_list);
 	printf("%s\n", "test");
@@ -84,7 +90,7 @@ void	ft_core_32_litle(char *ptr)
 		{
 			p_sync = (void*)p_lc;
 			printf("nsyms[%u] symoff[%u] stroff[%u]\n", p_sync->nsyms, p_sync->symoff, p_sync->stroff);
-			ft_nlist(p_sync->nsyms, p_sync->symoff, 100670585, ptr);
+			ft_nlist(p_sync->nsyms, p_sync->symoff, p_sync->stroff, ptr);
 			break;
 		}
 		size = p_lc->cmdsize;

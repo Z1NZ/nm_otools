@@ -25,8 +25,4 @@ void	ft_core(char *ptr)
 		ft_putstr("test FAT_MAGIC\n");
 	else if (magic_number == FAT_CIGAM) //little endian
 		ft_putstr("test FAT_CIGAM\n");
-	else if (magic_number == FAT_MAGIC_64)
-		ft_putstr("test FAT_MAGIC_64\n");
-	else if (magic_number == FAT_CIGAM_64)
-		ft_putstr("test FAT_CIGAM_64\n");
 }
