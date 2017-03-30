@@ -1,6 +1,6 @@
 
 #include "ft_nm.h"
-     #include <unistd.h>
+#include <unistd.h>
 
 
 static inline void	ft_nlist(unsigned long nsyms, unsigned long symoff, unsigned long stroff, char *ptr)
@@ -25,13 +25,13 @@ static inline void	ft_nlist(unsigned long nsyms, unsigned long symoff, unsigned 
 			if (p_list == NULL)
 			{
 				if ((p_list = ft_memalloc(sizeof(t_list))) == NULL)
-					ft_error_errno("ft_memalloc", NULL)
+					ft_error_errno("ft_memalloc", NULL);
 				h_list = p_list;
 			}
 			else
 			{	
 				if ((p_list->next = ft_memalloc(sizeof(t_list))) == NULL)
-					ft_error_errno("ft_memalloc", NULL)
+					ft_error_errno("ft_memalloc", NULL);
 				p_list = p_list->next;
 			}
 			p_list->n_value = tab[i].n_value;

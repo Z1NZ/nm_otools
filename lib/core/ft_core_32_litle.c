@@ -35,12 +35,14 @@ static void	ft_nlist(unsigned int nsyms, unsigned int symoff, unsigned int strof
 		{
 			if (p_list == NULL)
 			{
-				p_list = ft_memalloc(sizeof(t_list));
+				if ((p_list = ft_memalloc(sizeof(t_list))) == NULL)
+					ft_error_errno("ft_memalloc", NULL);
 				h_list = p_list;
 			}
 			else
-			{	
-				p_list->next = ft_memalloc(sizeof(t_list));
+			{
+				if ((p_list->next = ft_memalloc(sizeof(t_list))) == NULL)
+					ft_error_errno("ft_memalloc", NULL);
 				p_list = p_list->next;
 			}
 			p_list->n_value = tab[i].n_value;
