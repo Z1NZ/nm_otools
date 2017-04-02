@@ -17,6 +17,14 @@ typedef struct		s_list
 	struct s_list	*next;
 }					t_list;
 
+typedef struct		s_count
+{
+	uint64_t		text;
+	uint64_t		data;
+	uint64_t		bss;
+	uint64_t		k;
+}					t_count;
+
 void    ft_openner(char *argv);
 
 
@@ -50,8 +58,8 @@ char	*ft_strcpy(char *s1, const char *s2);
 char	*ft_strrev(char *str);
 void	*ft_memcpy(void *s1, const void *s2, size_t n);
 void	*reverse(char *ptr, size_t len);
-char	get_type(struct nlist *sym);
-char	get_type_64(struct nlist_64 *sym);
+char	get_type(struct nlist *nl);
+char	get_type_64(struct nlist_64 *nl, t_count count_f);
 int		ft_strcmp(char *s1, char *s2);
 void	sort_list(t_list *ptr);
 void	ft_list_swap(t_list *a, t_list *b);

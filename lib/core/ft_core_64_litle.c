@@ -47,7 +47,7 @@ static void	ft_nlist(unsigned int nsyms, unsigned int symoff, unsigned int strof
 			}
 			p_list->n_value = tab[i].n_value;
 			endian_swap((unsigned int *)&(p_list->n_value));
-			p_list->type = get_type_64(&tab[i]);
+			// p_list->type = get_type_64(&tab[i]);
 			tmp	= tab[i].n_un.n_strx;
 			endian_swap(&tmp);
 			p_list->ptr = ft_strdup(string + tmp);
