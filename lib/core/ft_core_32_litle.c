@@ -64,7 +64,7 @@ static void	ft_nlist(unsigned int nsyms, unsigned int symoff, unsigned int strof
 }
 
 
-static inline	void		count_flag(t_count count, struct load_command *lc)
+static inline	void		count_flag(t_count *count, struct load_command *lc)
 {
 	struct segment_command 	*sc;
 	struct section 			*s;
@@ -79,13 +79,13 @@ static inline	void		count_flag(t_count count, struct load_command *lc)
 	while (j <= len)
 	{
 		if(!ft_strcmp(s[j].sectname, SECT_TEXT) && !ft_strcmp(s[j].segname, SEG_TEXT))
-			count.text = count.k + 1;
+			count->text = count->k + 1;
 		else if(!ft_strcmp(s[j].sectname, SECT_DATA) && !ft_strcmp(s[j].segname, SEG_DATA))
-			count.data = count.k + 1;
+			count->data = count->k + 1;
 		else if(!ft_strcmp(s[j].sectname, SECT_BSS) && !ft_strcmp(s[j].segname, SEG_DATA))
-			count.bss = count.k + 1;
+			count->bss = count->k + 1;
 		j++;
-		count.k++;
+		count->k++;
 	}
 }
 
@@ -114,14 +114,14 @@ void	ft_core_32_litle(char *ptr)
 	{
 		sym = p_lc->cmd;
 		endian_swap(&sym);
- 		if (sym == LC_SEGMENT)
- 			count_flag(count_f, p_lc);
 		if (sym == LC_SYMTAB)
 		{
 			p_sync = (void*)p_lc;
 			ft_nlist(p_sync->nsyms, p_sync->symoff, p_sync->stroff, ptr, count_f);
 			break;
 		}
+ 		if (sym == LC_SEGMENT)
+ 			count_flag(&count_f, p_lc);
 		size = p_lc->cmdsize;
 		endian_swap(&size);
 		p_lc = (void *)(((char *)p_lc) + size);

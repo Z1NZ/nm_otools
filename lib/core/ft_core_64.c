@@ -48,7 +48,7 @@ static inline void	ft_nlist_64(struct symtab_command *sc, char *ptr, t_count cou
 	}
 }
 
-static inline	void		count_flag_64(t_count count, struct load_command *lc)
+static inline	void		count_flag_64(t_count *count, struct load_command *lc)
 {
 	struct segment_command_64 	*sc;
 	struct section_64 			*s;
@@ -60,13 +60,13 @@ static inline	void		count_flag_64(t_count count, struct load_command *lc)
 	while (j < sc->nsects)
 	{
 		if(!ft_strcmp((s[j]).sectname, SECT_TEXT) && !ft_strcmp(s[j].segname, SEG_TEXT))
-			count.text = count.k + 1;
+			count->text = count->k + 1;
 		else if(!ft_strcmp(s[j].sectname, SECT_DATA) && !ft_strcmp(s[j].segname, SEG_DATA))
-			count.data = count.k + 1;
+			count->data = count->k + 1;
 		else if(!ft_strcmp(s[j].sectname, SECT_BSS) && !ft_strcmp(s[j].segname, SEG_DATA))
-			count.bss = count.k + 1;
+			count->bss = count->k + 1;
 		j++;
-		count.k++;
+		count->k++;
 	}
 }
 
@@ -87,13 +87,13 @@ void	ft_core_64(char *ptr)
  	p_lc = (struct load_command *)(p_h + 1);
  	while(i < p_h->sizeofcmds)
  	{
-		if (p_lc->cmd == LC_SEGMENT_64)
-			count_flag_64(count_f, p_lc);
  		if (p_lc->cmd == LC_SYMTAB)
  		{
  			ft_nlist_64((void*)p_lc, ptr, count_f);
 			break;
  		}
+		if (p_lc->cmd == LC_SEGMENT_64)
+			count_flag_64(&count_f, p_lc);
  		p_lc = (void *)(((char *)p_lc) + p_lc->cmdsize);
  		++i;
  	}

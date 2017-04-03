@@ -1,1 +1,4 @@
-{}
+{
+  "test_nm.py::test_myoutput7": true, 
+  "test_nm.py::test_myoutput9": true
+}
