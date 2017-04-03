@@ -41,7 +41,7 @@ lftfclean:
 
 re: fclean all
 
-git:
+git:fclean
 	@git add .
 	@echo "Enter Your Commit :"
 	@read var1 ; git commit -m "$$var1"
