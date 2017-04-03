@@ -35,7 +35,7 @@ static inline void	ft_nlist(unsigned long nsyms, unsigned long symoff, unsigned 
 				p_list = p_list->next;
 			}
 			p_list->n_value = tab[i].n_value;
-			p_list->type = get_type(&tab[i]);
+			// p_list->type = get_type(&tab[i]);
 			p_list->ptr = string + tab[i].n_un.n_strx;
 		}
 		i++;

@@ -3,7 +3,7 @@
 #include <unistd.h>
 	#include <stdio.h>
 
-static inline void	ft_put_out(struct symtab_command *sc, char *ptr, t_count count_f)
+static inline void	ft_nlist_64(struct symtab_command *sc, char *ptr, t_count count_f)
 {
 	char 						*string;
 	struct nlist_64				*tab;
@@ -48,7 +48,7 @@ static inline void	ft_put_out(struct symtab_command *sc, char *ptr, t_count coun
 	}
 }
 
-static	void		count_flag_64(t_count count, struct load_command *lc)
+static inline	void		count_flag_64(t_count count, struct load_command *lc)
 {
 	struct segment_command_64 	*sc;
 	struct section_64 			*s;
@@ -59,11 +59,11 @@ static	void		count_flag_64(t_count count, struct load_command *lc)
 	j = 0;
 	while (j < sc->nsects)
 	{
-		if(!ft_strcmp((s[j]).sectname, SECT_TEXT) && !ft_strcmp((s[j]).segname, SEG_TEXT))
+		if(!ft_strcmp((s[j]).sectname, SECT_TEXT) && !ft_strcmp(s[j].segname, SEG_TEXT))
 			count.text = count.k + 1;
-		else if(!ft_strcmp((s[j]).sectname, SECT_DATA) && !ft_strcmp((s[j]).segname, SEG_DATA))
+		else if(!ft_strcmp(s[j].sectname, SECT_DATA) && !ft_strcmp(s[j].segname, SEG_DATA))
 			count.data = count.k + 1;
-		else if(!ft_strcmp((s[j]).sectname, SECT_BSS) && !ft_strcmp((s[j]).segname, SEG_DATA))
+		else if(!ft_strcmp(s[j].sectname, SECT_BSS) && !ft_strcmp(s[j].segname, SEG_DATA))
 			count.bss = count.k + 1;
 		j++;
 		count.k++;
@@ -75,7 +75,6 @@ void	ft_core_64(char *ptr)
 {
 	struct mach_header_64		*p_h;
 	struct load_command 		*p_lc;
-	struct symtab_command		*p_sync;
 	uint32_t					i;
 	t_count						count_f;
 
@@ -88,12 +87,11 @@ void	ft_core_64(char *ptr)
  	p_lc = (struct load_command *)(p_h + 1);
  	while(i < p_h->sizeofcmds)
  	{
- 		if (p_lc->cmd == LC_SEGMENT_64)
- 			count_flag_64(count_f, p_lc);
+		if (p_lc->cmd == LC_SEGMENT_64)
+			count_flag_64(count_f, p_lc);
  		if (p_lc->cmd == LC_SYMTAB)
  		{
- 			p_sync = (void*)p_lc;
- 			ft_put_out(p_sync, ptr, count_f);
+ 			ft_nlist_64((void*)p_lc, ptr, count_f);
 			break;
  		}
  		p_lc = (void *)(((char *)p_lc) + p_lc->cmdsize);

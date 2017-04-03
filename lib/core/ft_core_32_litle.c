@@ -9,7 +9,7 @@ static inline void endian_swap(unsigned int* x)
 		(*x<<(unsigned int)24);
 }
 
-static void	ft_nlist(unsigned int nsyms, unsigned int symoff, unsigned int stroff, char *ptr)
+static void	ft_nlist(unsigned int nsyms, unsigned int symoff, unsigned int stroff, char *ptr, t_count count_f)
 {
 	char 						*string;
 	struct nlist				*tab;
@@ -47,7 +47,7 @@ static void	ft_nlist(unsigned int nsyms, unsigned int symoff, unsigned int strof
 			}
 			p_list->n_value = tab[i].n_value;
 			endian_swap((unsigned int *)&(p_list->n_value));
-			p_list->type = get_type(&tab[i]);
+			p_list->type = get_type(&tab[i], count_f);
 			tmp	= tab[i].n_un.n_strx;
 			endian_swap(&tmp);
 			p_list->ptr = ft_strdup(string + tmp);
@@ -63,6 +63,32 @@ static void	ft_nlist(unsigned int nsyms, unsigned int symoff, unsigned int strof
 	}
 }
 
+
+static inline	void		count_flag(t_count count, struct load_command *lc)
+{
+	struct segment_command 	*sc;
+	struct section 			*s;
+	uint32_t				j;
+	uint32_t				len;
+
+	sc = (void *)lc;
+	s = (void *)(sc + 1);
+	j = 0;
+	len = sc->nsects;
+	endian_swap(&len);
+	while (j <= len)
+	{
+		if(!ft_strcmp(s[j].sectname, SECT_TEXT) && !ft_strcmp(s[j].segname, SEG_TEXT))
+			count.text = count.k + 1;
+		else if(!ft_strcmp(s[j].sectname, SECT_DATA) && !ft_strcmp(s[j].segname, SEG_DATA))
+			count.data = count.k + 1;
+		else if(!ft_strcmp(s[j].sectname, SECT_BSS) && !ft_strcmp(s[j].segname, SEG_DATA))
+			count.bss = count.k + 1;
+		j++;
+		count.k++;
+	}
+}
+
 void	ft_core_32_litle(char *ptr)
 {
 	struct mach_header			*p_h;
@@ -72,6 +98,7 @@ void	ft_core_32_litle(char *ptr)
 	uint32_t					len;
 	uint32_t					sym;
 	uint32_t					size;
+	t_count						count_f;
 
 
 	p_h = (void *)ptr;
@@ -79,14 +106,20 @@ void	ft_core_32_litle(char *ptr)
 	p_lc = (struct load_command *)(p_h + 1);
 	len = p_h->sizeofcmds;
 	endian_swap(&len);
+	count_f.text = 0;
+	count_f.data = 0;
+	count_f.bss = 0;
+	count_f.k = 0;
 	while(i < len)
 	{
 		sym = p_lc->cmd;
 		endian_swap(&sym);
+ 		if (sym == LC_SEGMENT)
+ 			count_flag(count_f, p_lc);
 		if (sym == LC_SYMTAB)
 		{
 			p_sync = (void*)p_lc;
-			ft_nlist(p_sync->nsyms, p_sync->symoff, p_sync->stroff, ptr);
+			ft_nlist(p_sync->nsyms, p_sync->symoff, p_sync->stroff, ptr, count_f);
 			break;
 		}
 		size = p_lc->cmdsize;
