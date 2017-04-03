@@ -42,6 +42,8 @@ void	simple_print_32(t_list *ptr);
 */
 
 void	ft_core(char *ptr);
+void	ft_core_fat(char *ptr);
+void	ft_core_fat_litle(char *ptr);
 void	ft_core_64(char *ptr);
 void	ft_core_64_litle(char *ptr);
 void	ft_core_32(char *ptr);

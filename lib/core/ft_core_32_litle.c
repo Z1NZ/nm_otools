@@ -16,7 +16,7 @@ static void	ft_nlist(unsigned int nsyms, unsigned int symoff, unsigned int strof
 	unsigned long				i;
 	t_list						*p_list;
 	t_list						*h_list;
-	unsigned int				tmp;
+	uint32_t					tmp;
 
 	p_list = NULL;
 	h_list = NULL;

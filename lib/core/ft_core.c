@@ -23,11 +23,12 @@ void	ft_core(char *ptr)
 	}
 	else if (magic_number == MH_CIGAM_64)//little endian
 	{
-		// ft_putstr("test MH_CIGAM_64\n");
+		 // ft_putstr("test MH_CIGAM_64\n");
 		ft_core_64_litle(ptr);
 	}
 	else if (magic_number == FAT_MAGIC) //big endian
-		ft_putstr("test FAT_MAGIC\n");
+		ft_core_fat(ptr);
 	else if (magic_number == FAT_CIGAM) //little endian
-		ft_putstr("test FAT_CIGAM\n");
+		ft_core_fat_litle(ptr);
+
 }

@@ -51,3 +51,7 @@ def test_myoutput9(capsys):
 	str1 = subprocess.check_output("nm ./nm-otool-tests/object_medium", stderr=subprocess.STDOUT, shell=True)
 	str2 = subprocess.check_output("./ft_nm ./nm-otool-tests/object_medium", stderr=subprocess.STDOUT, shell=True)
 	assert str1 == str2
+def test_myoutput9(capsys):
+	str1 = subprocess.check_output("nm ./nm-otool-tests/fat_hard", stderr=subprocess.STDOUT, shell=True)
+	str2 = subprocess.check_output("./ft_nm ./nm-otool-tests/fat_hard", stderr=subprocess.STDOUT, shell=True)
+	assert str1 == str2
