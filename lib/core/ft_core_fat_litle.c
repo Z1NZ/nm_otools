@@ -14,18 +14,19 @@ void	ft_core_fat_litle(t_file_info info)
 	struct fat_header	*p_fh;
 	struct fat_arch		*p_fa;
 	uint32_t			n_arch;
-	uint32_t			offset;
 
 	p_fh = (void *)info.data_file;
 	p_fa = (void *)(p_fh + 1);
 	n_arch = endian_swap(p_fh->nfat_arch);
 	while(n_arch)
 	{
-		offset = endian_swap(p_fa->offset);
-		info.data_file += offset;
+
+		info.data_file += endian_swap(p_fa->offset);
+		ft_putnbr((int)endian_swap(p_fa->offset));
+		ft_putstr("----------------\n");
 		ft_core(info);// faire attention au retour de sur ft_core
-		ft_putnbr((int)offset);
-		ft_putstr("\n");
+		info.data_file -= endian_swap(p_fa->offset);
+
 		++p_fa;
 		--n_arch;
 	}

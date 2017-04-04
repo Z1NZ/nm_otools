@@ -15,6 +15,7 @@ void	ft_core_fat(t_file_info info)
 		{	
 			info.data_file += p_fa->offset;
 			ft_core(info);// faire attention au retour de sur ft_core
+			info.data_file -= p_fa->offset;
 		}
 		++p_fa;
 		--n_arch;
