@@ -21,12 +21,12 @@ void	ft_core_fat_litle(t_file_info info)
 	while(n_arch)
 	{
 
-		info.data_file += endian_swap(p_fa->offset);
-		ft_putnbr((int)endian_swap(p_fa->offset));
-		ft_putstr("----------------\n");
-		ft_core(info);// faire attention au retour de sur ft_core
-		info.data_file -= endian_swap(p_fa->offset);
-
+		if (n_arch == 1)
+		{
+			info.data_file += endian_swap(p_fa->offset);
+			ft_core(info);// faire attention au retour de sur ft_core
+			info.data_file -= endian_swap(p_fa->offset);
+		}
 		++p_fa;
 		--n_arch;
 	}
