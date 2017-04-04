@@ -5,7 +5,7 @@ void	simple_print_64(t_list *ptr)
 {
 	while(ptr)
 	{
-		if (ptr->n_value)
+		if (ptr->n_value || ptr->type == 't' || ptr->type == 'T')
 			ft_print_hexa_64(ptr->n_value);
 		else
 			write(1, "                ", 16);
@@ -23,7 +23,7 @@ void	simple_print_32(t_list *ptr)
 {
 	while(ptr)
 	{
-		if (ptr->n_value)
+		if (ptr->n_value || ptr->type == 't' || ptr->type == 'T')
 			ft_print_hexa_32(ptr->n_value);
 		else
 			write(1, "        ", 8);
