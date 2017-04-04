@@ -60,7 +60,7 @@ static inline	void		count_flag(t_count *count, struct load_command *lc)
 	s = (void *)(sc + 1);
 	j = 0;
 	len = sc->nsects;
-	while (j <= len)
+	while (j < len)
 	{
 		if(!ft_strcmp(s[j].sectname, SECT_TEXT) && !ft_strcmp(s[j].segname, SEG_TEXT))
 			count->text = count->k + 1;
