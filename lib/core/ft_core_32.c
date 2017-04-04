@@ -3,7 +3,7 @@
 #include <unistd.h>
 
 
-static inline void	ft_nlist(struct symtab_command *sc, char *ptr, t_count count_f)
+static inline void	ft_nlist(struct symtab_command *sc, t_count count_f, t_file_info info)
 {
 	char 						*string;
 	struct nlist				*tab;
@@ -13,11 +13,17 @@ static inline void	ft_nlist(struct symtab_command *sc, char *ptr, t_count count_
 
 	p_list = NULL;
 	h_list = NULL;
-	tab = (void *)((char *)ptr + sc->symoff);
-	string = ptr + sc->stroff;
+	tab = (void *)((char *)info.data_file + sc->symoff);
+	string = info.data_file + sc->stroff;
 	i = 0;
 	while(i < sc->nsyms)
 	{
+		if ((((char *)&tab[i]) - info.data_file) > info.data_stat.st_size)
+		{
+			ft_putstr_fd(info.filename, 2);
+			ft_putstr_fd(" : The file was not recognized as a valid object file\n", 2);
+			return ;
+		}
 		if (tab[i].n_type & N_STAB)
 			 ;
 		else if ((tab[i].n_type & N_TYPE) || tab[i].n_type & N_EXT)
@@ -73,7 +79,7 @@ static inline	void		count_flag(t_count *count, struct load_command *lc)
 	}
 }
 
-void	ft_core_32(char *ptr)
+void	ft_core_32(t_file_info info)
 {
 	struct mach_header			*p_h;
 	struct load_command 		*p_lc;
@@ -82,7 +88,7 @@ void	ft_core_32(char *ptr)
 	t_count						count_f;
 
 
-	p_h = (void *)ptr;
+	p_h = (void *)info.data_file;
 	i = 0;
 	count_f.text = 0;
 	count_f.data = 0;
@@ -92,10 +98,16 @@ void	ft_core_32(char *ptr)
 
 	while(i < p_h->sizeofcmds)
 	{
+		if (((char *)(p_lc) - info.data_file) > info.data_stat.st_size)
+		{
+			ft_putstr_fd(info.filename, 2);
+			ft_putstr_fd(" : The file was not recognized as a valid object file\n", 2);
+			return ;
+		}
 		if (p_lc->cmd == LC_SYMTAB)
 		{
 			p_sync = (void*)p_lc;
-			ft_nlist((void*)p_lc, ptr, count_f);
+			ft_nlist((void*)p_lc, count_f, info);
 			break;
 		}
 		if (p_lc->cmd == LC_SEGMENT)

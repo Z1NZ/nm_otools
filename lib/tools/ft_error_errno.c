@@ -9,4 +9,5 @@ void ft_error_errno(char * ptr, char *name)
 	ft_putstr_fd(" ", 2);
 	if(name)
 		ft_putstr_fd(name, 2);
+	ft_putstr_fd("\n", 2);
 }

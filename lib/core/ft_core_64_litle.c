@@ -1,33 +1,39 @@
 #include "ft_nm.h"
 #include <unistd.h>
 
-static inline void endian_swap(unsigned int* x)
+
+static inline uint64_t endian_swap_long(uint64_t x)
 {
-	*x = (*x>>(unsigned int)24) | 
-		((*x<<(unsigned int)8) & 0x00FF0000) |
-		((*x>>(unsigned int)8) & 0x0000FF00) |
-		(*x<<(unsigned int)24);
+	x = ((x << 8) & 0xFF00FF00FF00FF00ULL ) | ((x >> 8) & 0x00FF00FF00FF00FFULL );
+	x = ((x << 16) & 0xFFFF0000FFFF0000ULL ) | ((x >> 16) & 0x0000FFFF0000FFFFULL );
+	return (x << 32) | (x >> 32);
 }
 
-static void	ft_nlist(unsigned int nsyms, unsigned int symoff, unsigned int stroff, char *ptr, t_count count_f)
+static inline unsigned int endian_swap(unsigned int x)
+{
+	x = (x>>(unsigned int)24) | 
+		((x<<(unsigned int)8) & 0x00FF0000) |
+		((x>>(unsigned int)8) & 0x0000FF00) |
+		(x<<(unsigned int)24);
+	return(x);
+}
+
+static void	ft_nlist(struct symtab_command *sc, t_file_info info, t_count count_f)
 {
 	char 						*string;
 	struct nlist_64				*tab;
 	unsigned long				i;
+	unsigned long				len;
 	t_list						*p_list;
 	t_list						*h_list;
-	unsigned int				tmp;
 
 	p_list = NULL;
 	h_list = NULL;
-
-	endian_swap(&nsyms);
-	endian_swap(&symoff);
-	endian_swap(&stroff);
-	tab = (void *)((char *)ptr + symoff);
-	string = ptr + stroff;
+	tab = (void *)((char *)info.data_file + endian_swap(sc->symoff));
+	string = info.data_file + endian_swap(sc->stroff);
 	i = 0;
-	while(i < nsyms)
+	len = endian_swap(sc->nsyms);
+	while(i < len)
 	{
 		if (tab[i].n_type & N_STAB)
 			 ;
@@ -45,12 +51,9 @@ static void	ft_nlist(unsigned int nsyms, unsigned int symoff, unsigned int strof
 					ft_error_errno("ft_memalloc", NULL);
 				p_list = p_list->next;
 			}
-			p_list->n_value = tab[i].n_value;
-			endian_swap((unsigned int *)&(p_list->n_value));
+			p_list->n_value = endian_swap_long(tab[i].n_value);
 			p_list->type = get_type_64(&tab[i], count_f);
-			tmp	= tab[i].n_un.n_strx;
-			endian_swap(&tmp);
-			p_list->ptr = ft_strdup(string + tmp);
+			p_list->ptr = ft_strdup(string + endian_swap(tab[i].n_un.n_strx));
 			reverse(p_list->ptr, ft_strlen(p_list->ptr));
 		}
 		i++;
@@ -64,17 +67,25 @@ static void	ft_nlist(unsigned int nsyms, unsigned int symoff, unsigned int strof
 }
 
 
-static inline	void		count_flag_64(t_count *count, struct load_command *lc)
+static inline	void		count_flag_64(t_count *count, struct load_command *lc, t_file_info info)
 {
-	struct segment_command_64 	*sc;
-	struct section_64 			*s;
-	unsigned int j;
+	struct segment_command_64	*sc;
+	struct section_64			*s;
+	uint32_t					j;
+	uint32_t					len;
 
 	sc = (void *)lc;
 	s = (void*)((char *)(sc + 1));
 	j = 0;
-	while (j < sc->nsects)
+	len = endian_swap(sc->nsects);
+	while (j < len)
 	{
+		if ((((char *)&(s[j])) - info.data_file) > info.data_stat.st_size)
+		{
+			ft_putstr_fd(info.filename, 2);
+			ft_putstr_fd(" : The file was not recognized as a valid object file\n", 2);
+			return ;
+		}
 		if(!ft_strcmp(s[j].sectname, SECT_TEXT) && !ft_strcmp(s[j].segname, SEG_TEXT))
 			count->text = count->k + 1;
 		else if(!ft_strcmp(s[j].sectname, SECT_DATA) && !ft_strcmp(s[j].segname, SEG_DATA))
@@ -86,42 +97,39 @@ static inline	void		count_flag_64(t_count *count, struct load_command *lc)
 	}
 }
 
-void	ft_core_64_litle(char *ptr)
+void	ft_core_64_litle(t_file_info info)
 {
 	struct mach_header_64		*p_h;
 	struct load_command 		*p_lc;
-	struct symtab_command		*p_sync;
 	uint32_t					i;
 	uint32_t					len;
-	uint32_t					sym;
-	uint32_t					size;
 	t_count						count_f;
 
 
-	p_h = (void *)ptr;
+	p_h = (void *)info.data_file;
 	i = 0;
 	p_lc = (struct load_command *)(p_h + 1);
-	len = p_h->sizeofcmds;
-	endian_swap(&len);
+	len = endian_swap(p_h->sizeofcmds);
 	count_f.text = 0;
 	count_f.data = 0;
 	count_f.bss = 0;
 	count_f.k = 0;
 	while(i < len)
 	{
-		sym = p_lc->cmd;
-		endian_swap(&sym);
-		if (sym == LC_SYMTAB)
+		if (((char *)(p_lc) - info.data_file) > info.data_stat.st_size)
 		{
-			p_sync = (void*)p_lc;
-			ft_nlist(p_sync->nsyms, p_sync->symoff, p_sync->stroff, ptr, count_f);
+			ft_putstr_fd(info.filename, 2);
+			ft_putstr_fd(" : The file was not recognized as a valid object file\n", 2);
+			return ;
+		}
+		if (endian_swap(p_lc->cmd) == LC_SYMTAB)
+		{
+			ft_nlist((void*)p_lc, info, count_f);
 			break;
 		}
- 		if (sym == LC_SEGMENT_64)
- 			count_flag_64(&count_f, p_lc);
-		size = p_lc->cmdsize;
-		endian_swap(&size);
-		p_lc = (void *)(((char *)p_lc) + size);
+ 		if (endian_swap(p_lc->cmd) == LC_SEGMENT_64)
+ 			count_flag_64(&count_f, p_lc, info);
+		p_lc = (void *)(((char *)p_lc) + endian_swap(p_lc->cmdsize));
 		++i;
 	}
 }

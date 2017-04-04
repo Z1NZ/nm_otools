@@ -25,11 +25,17 @@ typedef struct		s_count
 	unsigned char	k;
 }					t_count;
 
-void    ft_openner(char *argv);
+typedef struct		s_file_info
+{
+	char			*data_file;
+	struct stat 	data_stat;
+	char			*filename;
+	unsigned int	opt;
+	unsigned int	padding;
 
+}					t_file_info;
 
-
-
+void	ft_openner(t_file_info info);
 
 /*
 ** 	PRINTER
@@ -41,14 +47,14 @@ void	simple_print_32(t_list *ptr);
 ** CORE
 */
 
-void	ft_core(char *ptr);
-void	ft_core_fat(char *ptr);
-void	ft_core_fat_litle(char *ptr);
-void	ft_core_64(char *ptr);
-void	ft_core_64_litle(char *ptr);
-void	ft_core_32(char *ptr);
-void	ft_core_32_litle(char *ptr);
-void	ft_core_mmap(int fd, struct stat *buff);
+void	ft_core(t_file_info info);
+void	ft_core_fat(t_file_info info);
+void	ft_core_fat_litle(t_file_info info);
+void	ft_core_64(t_file_info info);
+void	ft_core_64_litle(t_file_info info);
+void	ft_core_32(t_file_info info);
+void	ft_core_32_litle(t_file_info info);
+void	ft_core_mmap(int fd, t_file_info info);
 
 /*
 ** TOOLS
@@ -62,8 +68,7 @@ void	*ft_memcpy(void *s1, const void *s2, size_t n);
 void	*reverse(char *ptr, size_t len);
 
 char	get_type(struct nlist *nl, t_count count_f);
-char	get_type_64(struct nlist_64 *nl, t_count count_f);
-
+char	get_type_64(struct nlist_64 *nl, t_count count);
 int		ft_strcmp(char *s1, char *s2);
 void	sort_list(t_list *ptr);
 void	ft_list_swap(t_list *a, t_list *b);
