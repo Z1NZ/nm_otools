@@ -40,6 +40,8 @@ int		main(int argc, char *argv[])
 		{
 			info.filename = argv[i];
 			ft_openner(info);
+			info.filename = NULL;
+			info.data_file = NULL;
 			++i;
 		}
 	}

@@ -46,6 +46,7 @@ static inline void	ft_nlist(struct symtab_command *sc, t_count count_f, t_file_i
 		}
 		i++;
 	}
+	p_list = NULL;
 	if (h_list)
 	{
 		sort_list(h_list);

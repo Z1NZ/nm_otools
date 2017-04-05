@@ -10,7 +10,7 @@ static inline unsigned int endian_swap(unsigned int x)
 		return (x);
 }
 
-static void	ft_nlist(struct symtab_command *sc, char *ptr, t_count count_f)
+static void	ft_nlist(struct symtab_command *sc, t_count count_f, t_file_info info)
 {
 	char 						*string;
 	struct nlist				*tab;
@@ -21,17 +21,25 @@ static void	ft_nlist(struct symtab_command *sc, char *ptr, t_count count_f)
 
 	p_list = NULL;
 	h_list = NULL;
-	tab = (void *)((char *)ptr + endian_swap(sc->symoff));
-	string = ptr + endian_swap(sc->stroff);
+	tab = (void *)((char *)info.data_file + endian_swap(sc->symoff));
+	string = info.data_file + endian_swap(sc->stroff);
 	i = 0;
 	len = endian_swap(sc->nsyms);
+	ft_putnbr((int)len);
 	while(i < len)
 	{
+		if ((((char *)&tab[i]) - info.data_file) > info.data_stat.st_size)
+		{
+			ft_putstr_fd(info.filename, 2);
+			ft_putstr_fd(" : The file was not recognized as a valid object file\n", 2);
+			ft_free_list_litle(h_list);
+			return ;
+		}
 		if (tab[i].n_type & N_STAB)
 			 ;
 		else if ((tab[i].n_type & N_TYPE) || tab[i].n_type & N_EXT)
 		{
-			if (p_list == NULL)
+			if (h_list == NULL)
 			{
 				if ((p_list = ft_memalloc(sizeof(t_list))) == NULL)
 					ft_error_errno("ft_memalloc", NULL);
@@ -45,11 +53,13 @@ static void	ft_nlist(struct symtab_command *sc, char *ptr, t_count count_f)
 			}
 			p_list->n_value = endian_swap(tab[i].n_value);
 			p_list->type = get_type(&tab[i], count_f);
-			p_list->ptr = ft_strdup(string + endian_swap(tab[i].n_un.n_strx));
-			reverse(p_list->ptr, ft_strlen(p_list->ptr));
+			p_list->ptr = (string + endian_swap(tab[i].n_un.n_strx));
+			p_list->ptr = reverse(p_list->ptr, ft_strlen(p_list->ptr));
 		}
 		i++;
 	}
+	p_list = NULL;
+	ft_putstr("SORTIR");
 	if (h_list)
 	{
 		sort_list(h_list);
@@ -97,7 +107,6 @@ void	ft_core_32_litle(t_file_info info)
 	uint32_t					len;
 	t_count						count_f;
 
-
 	p_h = (void *)info.data_file;
 	i = 0;
 	p_lc = (struct load_command *)(p_h + 1);
@@ -116,7 +125,8 @@ void	ft_core_32_litle(t_file_info info)
 		}
 		if (endian_swap(p_lc->cmd) == LC_SYMTAB)
 		{
-			ft_nlist((void*)p_lc, info.data_file, count_f);
+
+			ft_nlist((void*)p_lc, count_f, info);
 			break;
 		}
  		if (endian_swap(p_lc->cmd)  == LC_SEGMENT)

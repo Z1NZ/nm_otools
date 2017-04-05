@@ -33,6 +33,7 @@ static void	ft_nlist(struct symtab_command *sc, t_file_info info, t_count count_
 	string = info.data_file + endian_swap(sc->stroff);
 	i = 0;
 	len = endian_swap(sc->nsyms);
+	ft_putstr("sisisi");
 	while(i < len)
 	{
 		if (tab[i].n_type & N_STAB)
@@ -53,11 +54,12 @@ static void	ft_nlist(struct symtab_command *sc, t_file_info info, t_count count_
 			}
 			p_list->n_value = endian_swap_long(tab[i].n_value);
 			p_list->type = get_type_64(&tab[i], count_f);
-			p_list->ptr = ft_strdup(string + endian_swap(tab[i].n_un.n_strx));
-			reverse(p_list->ptr, ft_strlen(p_list->ptr));
+			p_list->ptr = (string + endian_swap(tab[i].n_un.n_strx));
+			p_list->ptr = reverse(p_list->ptr, ft_strlen(p_list->ptr));
 		}
 		i++;
 	}
+	p_list = NULL;
 	if (h_list)
 	{
 		sort_list(h_list);

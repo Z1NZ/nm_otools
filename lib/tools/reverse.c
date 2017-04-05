@@ -15,10 +15,9 @@ void	*reverse(char *ptr, size_t len)
 	size_t	i;
 
 	i = 0;
-	rev = (char *)malloc((unsigned long)len + 1);
+	rev = (char *)ft_memalloc((unsigned long)len + 1);
 	rev = ft_memcpy(rev, ptr, len);
-	rev[len + 1] = '\0';
-	while(i < len)
+	while(i <= len)
 	{
 		endian_swap((unsigned int *) (void *)rev + i);
 		i += 4;

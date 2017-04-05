@@ -18,11 +18,14 @@ void	ft_core_fat_litle(t_file_info info)
 	p_fh = (void *)info.data_file;
 	p_fa = (void *)(p_fh + 1);
 	n_arch = endian_swap(p_fh->nfat_arch);
+	ft_putnbr((int)n_arch);
+	ft_putstr("    n_arch\n");
 	while(n_arch)
 	{
 
 		if (n_arch == 1)
 		{
+			ft_putnbr((int)endian_swap(p_fa->offset));
 			info.data_file += endian_swap(p_fa->offset);
 			ft_core(info);// faire attention au retour de sur ft_core
 			info.data_file -= endian_swap(p_fa->offset);
