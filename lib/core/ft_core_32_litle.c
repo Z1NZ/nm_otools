@@ -25,13 +25,11 @@ static void	ft_nlist(struct symtab_command *sc, t_count count_f, t_file_info inf
 	string = info.data_file + endian_swap(sc->stroff);
 	i = 0;
 	len = endian_swap(sc->nsyms);
-	ft_putnbr((int)len);
 	while(i < len)
 	{
 		if ((((char *)&tab[i]) - info.data_file) > info.data_stat.st_size)
 		{
-			ft_putstr_fd(info.filename, 2);
-			ft_putstr_fd(" : The file was not recognized as a valid object file\n", 2);
+			ft_error_recognized(info.filename);
 			ft_free_list_litle(h_list);
 			return ;
 		}
@@ -54,17 +52,16 @@ static void	ft_nlist(struct symtab_command *sc, t_count count_f, t_file_info inf
 			p_list->n_value = endian_swap(tab[i].n_value);
 			p_list->type = get_type(&tab[i], count_f);
 			p_list->ptr = (string + endian_swap(tab[i].n_un.n_strx));
-			p_list->ptr = reverse(p_list->ptr, ft_strlen(p_list->ptr));
+			p_list->ptr = p_list->ptr;
 		}
 		i++;
 	}
 	p_list = NULL;
-	ft_putstr("SORTIR");
 	if (h_list)
 	{
 		sort_list(h_list);
 		simple_print_32(h_list);
-		ft_free_list_litle(h_list);
+		ft_free_list(h_list);
 	}
 }
 
@@ -84,8 +81,7 @@ static inline	void		count_flag(t_count *count, struct load_command *lc, t_file_i
 	{
 		if ((((char *)&(s[j])) - info.data_file) > info.data_stat.st_size)
 		{
-			ft_putstr_fd(info.filename, 2);
-			ft_putstr_fd(" : The file was not recognized as a valid object file\n", 2);
+			ft_error_recognized(info.filename);
 			return ;
 		}
 		if(!ft_strcmp(s[j].sectname, SECT_TEXT) && !ft_strcmp(s[j].segname, SEG_TEXT))
@@ -119,8 +115,7 @@ void	ft_core_32_litle(t_file_info info)
 	{
 		if (((char *)(p_lc) - info.data_file) > info.data_stat.st_size)
 		{
-			ft_putstr_fd(info.filename, 2);
-			ft_putstr_fd(" : The file was not recognized as a valid object file\n", 2);
+			ft_error_recognized(info.filename);
 			return ;
 		}
 		if (endian_swap(p_lc->cmd) == LC_SYMTAB)

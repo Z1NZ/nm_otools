@@ -35,6 +35,8 @@ typedef struct		s_file_info
 
 }					t_file_info;
 
+
+#define ERROR " The file was not recognized as a valid object file\n\n"
 void	ft_openner(t_file_info info);
 
 /*
@@ -66,7 +68,7 @@ char	*ft_strcpy(char *s1, const char *s2);
 char	*ft_strrev(char *str);
 void	*ft_memcpy(void *s1, const void *s2, size_t n);
 void	*reverse(char *ptr, size_t len);
-
+void	ft_error_recognized(const char *ptr);
 char	get_type(struct nlist *nl, t_count count_f);
 char	get_type_64(struct nlist_64 *nl, t_count count);
 int		ft_strcmp(char *s1, char *s2);

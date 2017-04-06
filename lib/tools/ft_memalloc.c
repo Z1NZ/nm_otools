@@ -10,7 +10,10 @@ void	*ft_memalloc(size_t size)
 		return (NULL);
 	new_space = (void*)malloc(size * sizeof(void*));
 	if (!new_space)
-		return (NULL);
+	{
+		ft_error_errno("ft_memalloc", NULL);
+		exit(-1);
+	}
 	ft_memset((unsigned char*)new_space, 0, size);
 	return (new_space);
 }

@@ -20,8 +20,7 @@ static inline void	ft_nlist_64(struct symtab_command *sc, t_count count_f, t_fil
 	{
 		if ((((char *)&tab[i]) - info.data_file) > info.data_stat.st_size)
 		{
-			ft_putstr_fd(info.filename, 2);
-			ft_putstr_fd(" : The file was not recognized as a valid object file\n", 2);
+			ft_error_recognized(info.filename);
 			return ;
 		}
 		if (tab[i].n_type & N_STAB)
@@ -68,8 +67,7 @@ static inline	void		count_flag_64(t_count *count, struct load_command *lc, t_fil
 	{
 		if ((((char *)&(s[j])) - info.data_file) > info.data_stat.st_size)
 		{
-			ft_putstr_fd(info.filename, 2);
-			ft_putstr_fd(" : The file was not recognized as a valid object file\n", 2);
+			ft_error_recognized(info.filename);
 			return ;
 		}
 		if(!ft_strcmp((s[j]).sectname, SECT_TEXT) && !ft_strcmp(s[j].segname, SEG_TEXT))
@@ -102,8 +100,7 @@ void	ft_core_64(t_file_info info)
  	{
  		if (((char *)(p_lc) - info.data_file) > info.data_stat.st_size)
 		{
-			ft_putstr_fd(info.filename, 2);
-			ft_putstr_fd(" : The file was not recognized as a valid object file\n", 2);
+			ft_error_recognized(info.filename);
 			return ;
 		}
  		if (p_lc->cmd == LC_SYMTAB)

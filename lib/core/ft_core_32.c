@@ -20,8 +20,7 @@ static inline void	ft_nlist(struct symtab_command *sc, t_count count_f, t_file_i
 	{
 		if ((((char *)&tab[i]) - info.data_file) > info.data_stat.st_size)
 		{
-			ft_putstr_fd(info.filename, 2);
-			ft_putstr_fd(" : The file was not recognized as a valid object file\n", 2);
+			ft_error_recognized(info.filename);
 			return ;
 		}
 		if (tab[i].n_type & N_STAB)
@@ -56,7 +55,7 @@ static inline void	ft_nlist(struct symtab_command *sc, t_count count_f, t_file_i
 }
 
 
-static inline	void		count_flag(t_count *count, struct load_command *lc)
+static inline	void		count_flag(t_count *count, struct load_command *lc, t_file_info info)
 {
 	struct segment_command 	*sc;
 	struct section 			*s;
@@ -69,6 +68,11 @@ static inline	void		count_flag(t_count *count, struct load_command *lc)
 	len = sc->nsects;
 	while (j < len)
 	{
+		if ((((char *)&(s[j])) - info.data_file) > info.data_stat.st_size)
+		{
+			ft_error_recognized(info.filename);
+			return ;
+		}
 		if(!ft_strcmp(s[j].sectname, SECT_TEXT) && !ft_strcmp(s[j].segname, SEG_TEXT))
 			count->text = count->k + 1;
 		else if(!ft_strcmp(s[j].sectname, SECT_DATA) && !ft_strcmp(s[j].segname, SEG_DATA))
@@ -101,8 +105,7 @@ void	ft_core_32(t_file_info info)
 	{
 		if (((char *)(p_lc) - info.data_file) > info.data_stat.st_size)
 		{
-			ft_putstr_fd(info.filename, 2);
-			ft_putstr_fd(" : The file was not recognized as a valid object file\n", 2);
+			ft_error_recognized(info.filename);
 			return ;
 		}
 		if (p_lc->cmd == LC_SYMTAB)
@@ -112,7 +115,7 @@ void	ft_core_32(t_file_info info)
 			break;
 		}
 		if (p_lc->cmd == LC_SEGMENT)
-			count_flag(&count_f, p_lc);
+			count_flag(&count_f, p_lc, info);
 		p_lc = (void *)(((char *)p_lc) + p_lc->cmdsize);
 		++i;
 	}

@@ -1,5 +1,11 @@
 #include "ft_nm.h"
 
+
+// #define	N_ABS	0x2		/* absolute, n_sect == NO_SECT */
+
+
+
+
 char	get_type_64(struct nlist_64 *nl, t_count count)
 {
 	char		c;
@@ -11,8 +17,8 @@ char	get_type_64(struct nlist_64 *nl, t_count count)
 		if (nl->n_value != 0)
 			c = 'c';
 	}
-	if ((nl->n_type & N_TYPE) == N_PBUD)
-		c = 'u';
+	else if ((nl->n_type & N_TYPE) == N_ABS)
+		c = 'a';
 	else if ((nl->n_type & N_TYPE) == N_SECT)
 	{
 		if (nl->n_sect == count.text)
@@ -24,6 +30,8 @@ char	get_type_64(struct nlist_64 *nl, t_count count)
 		else
 			c = 's';
 	}
+	else if ((nl->n_type & N_TYPE) == N_PBUD)
+		c = 'u';
 	else if ((nl->n_type & N_TYPE) == N_INDR)
 		c = 'i';
 	if ((nl->n_type & N_EXT) != 0 && c != '?')
@@ -42,8 +50,8 @@ char	get_type(struct nlist *nl, t_count count)
 		if (nl->n_value != 0)
 			c = 'c';
 	}
-	if ((nl->n_type & N_TYPE) == N_PBUD)
-		c = 'u';
+	else if ((nl->n_type & N_TYPE) == N_ABS)
+		c = 'a';
 	else if ((nl->n_type & N_TYPE) == N_SECT)
 	{
 		if (nl->n_sect == count.text)
@@ -55,6 +63,8 @@ char	get_type(struct nlist *nl, t_count count)
 		else
 			c = 's';
 	}
+	else if ((nl->n_type & N_TYPE) == N_PBUD)
+		c = 'u';
 	else if ((nl->n_type & N_TYPE) == N_INDR)
 		c = 'i';
 	if ((nl->n_type & N_EXT) != 0 && c != '?')
