@@ -57,6 +57,8 @@ void	ft_core_64_litle(t_file_info info);
 void	ft_core_32(t_file_info info);
 void	ft_core_32_litle(t_file_info info);
 void	ft_core_mmap(int fd, t_file_info info);
+int 	find_arch(t_file_info info);
+void	ft_print_arch(cpu_type_t type);
 
 /*
 ** TOOLS
