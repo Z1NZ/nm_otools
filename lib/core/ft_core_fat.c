@@ -9,7 +9,7 @@ static inline unsigned int endian_swap(unsigned int x)
 	return(x);
 }
 
-void	ft_core_fat(t_file_info info)
+int		ft_core_fat(t_file_info info)
 {
 	struct fat_header	*p_fh;
 	struct fat_arch		*p_fa;
@@ -21,7 +21,7 @@ void	ft_core_fat(t_file_info info)
 	p_fa = (void *)(p_fh + 1);
 	n_arch = p_fh->nfat_arch;
 	if (find_arch(info))
-		return ;
+		return (0);
 	while(n_arch)
 	{
 
@@ -31,12 +31,13 @@ void	ft_core_fat(t_file_info info)
 		ft_putstr("\n");
 		ft_putstr(info.filename);
 		if (p_h->magic == MH_CIGAM || p_h->magic == MH_CIGAM_64)
-			ft_print_arch((cpu_type_t)endian_swap((unsigned int)p_h->cputype));
+			ft_print_arch((cpu_type_t)endian_swap((unsigned int)p_h->cputype), (cpu_subtype_t)endian_swap((unsigned int)p_h->cpusubtype));
 		else
-			ft_print_arch((cpu_type_t)p_h->cputype);
+			ft_print_arch(p_h->cputype, p_h->cpusubtype);
 		ft_core(info);// faire attention au retour de sur ft_core
 		info.data_file -= p_fa->offset;
 		++p_fa;
 		--n_arch;
 	}
+	return(0);
 }

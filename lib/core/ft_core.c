@@ -1,6 +1,6 @@
 #include "ft_nm.h"
 
-void	ft_core(t_file_info info)
+int	ft_core(t_file_info info)
 {
 	uint32_t  				magic_number;
 
@@ -10,33 +10,33 @@ void	ft_core(t_file_info info)
 	if (magic_number == MH_MAGIC) //big endian
 	{
 		// ft_putstr(" test MH_MAGIC\n");
-		ft_core_32(info);
+		return(ft_core_32(info));
 	}
 	else if (magic_number == MH_CIGAM)//little endian
 	{
 		// ft_putstr(" test MH_CIGAM\n");
-		ft_core_32_litle(info);
+		return(ft_core_32_litle(info));
 	}
 	else if (magic_number == MH_MAGIC_64) //big endian
 	{
 
 		// ft_putstr(" test MH_MAGIC_64\n");
-		ft_core_64(info);
+		return(ft_core_64(info));
 	}
 	else if (magic_number == MH_CIGAM_64)//little endian
 	{
 		 // ft_putstr(" test MH_CIGAM_64\n");
-		ft_core_64_litle(info);
+		return(ft_core_64_litle(info));
 	}
 	else if (magic_number == FAT_MAGIC) //big endian
 	{
 		 // ft_putstr(" test FAT_MAGIC\n");
-		ft_core_fat(info);
+		return(ft_core_fat(info));
 	}
 	else if (magic_number == FAT_CIGAM) //little endian
 	{
 		 // ft_putstr(" test FAT_CIGAM\n");
-		ft_core_fat_litle(info);
+		return(ft_core_fat_litle(info));
 	}
 	else
 	{
@@ -44,6 +44,6 @@ void	ft_core(t_file_info info)
 			ft_error_recognized(info.filename);
 		else
 			ft_putstr_fd("not recognized part of fat_binary ", 2);
+		return (1);
 	}
-
 }

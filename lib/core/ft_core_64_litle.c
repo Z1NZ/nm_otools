@@ -104,7 +104,7 @@ static inline	void		count_flag_64(t_count *count, struct load_command *lc, t_fil
 	}
 }
 
-void	ft_core_64_litle(t_file_info info)
+int		ft_core_64_litle(t_file_info info)
 {
 	struct mach_header_64		*p_h;
 	struct load_command 		*p_lc;
@@ -126,7 +126,7 @@ void	ft_core_64_litle(t_file_info info)
 		if (((char *)(p_lc) - info.data_file) > info.data_stat.st_size)
 		{
 			ft_error_recognized(info.filename);
-			return ;
+			return (1);
 		}
 		if (endian_swap(p_lc->cmd) == LC_SYMTAB)
 		{
@@ -138,4 +138,5 @@ void	ft_core_64_litle(t_file_info info)
 		p_lc = (void *)(((char *)p_lc) + endian_swap(p_lc->cmdsize));
 		++i;
 	}
+	return(0);
 }

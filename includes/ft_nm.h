@@ -37,7 +37,7 @@ typedef struct		s_file_info
 
 
 #define ERROR " The file was not recognized as a valid object file\n\n"
-void	ft_openner(t_file_info info);
+int		ft_openner(t_file_info info);
 
 /*
 ** 	PRINTER
@@ -49,16 +49,18 @@ void	simple_print_32(t_list *ptr);
 ** CORE
 */
 
-void	ft_core(t_file_info info);
-void	ft_core_fat(t_file_info info);
-void	ft_core_fat_litle(t_file_info info);
-void	ft_core_64(t_file_info info);
-void	ft_core_64_litle(t_file_info info);
-void	ft_core_32(t_file_info info);
-void	ft_core_32_litle(t_file_info info);
-void	ft_core_mmap(int fd, t_file_info info);
+int		ft_core(t_file_info info);
+int		ft_core_fat(t_file_info info);
+int		ft_core_fat_litle(t_file_info info);
+int		ft_core_64(t_file_info info);
+int		ft_core_64_litle(t_file_info info);
+int		ft_core_32(t_file_info info);
+int		ft_core_32_litle(t_file_info info);
+int		ft_core_mmap(int fd, t_file_info info);
 int 	find_arch(t_file_info info);
-void	ft_print_arch(cpu_type_t type);
+void	ft_print_sub_arm(cpu_subtype_t sub);
+void	ft_print_sub_ppc(cpu_subtype_t sub);
+void	ft_print_arch(cpu_type_t type, cpu_subtype_t sub);
 
 /*
 ** TOOLS
