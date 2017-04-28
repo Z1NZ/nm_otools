@@ -61,6 +61,7 @@ int 	find_arch(t_file_info info);
 void	ft_print_sub_arm(cpu_subtype_t sub);
 void	ft_print_sub_ppc(cpu_subtype_t sub);
 void	ft_print_arch(cpu_type_t type, cpu_subtype_t sub);
+int		ft_core_static_lib(t_file_info info);
 
 /*
 ** TOOLS
