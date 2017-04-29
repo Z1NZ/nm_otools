@@ -67,6 +67,10 @@ int		ft_core_static_lib(t_file_info info);
 /*
 ** TOOLS
 */
+int		ft_atoi(const char *str);
+int		ft_isspace(int c);
+int		ft_isdigit(int c);
+char	*ft_strstr(char *str, char *to_find);
 void	ft_free_list(t_list *head);
 void	ft_free_list_litle(t_list *head);
 char	*ft_strdup(const char *s1);
