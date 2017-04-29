@@ -1,13 +1,14 @@
 #include "ft_nm.h"
 #define STATIC_LIB 738142165265366049
+
 int	ft_core(t_file_info info)
 {
 	uint32_t  				magic_number;
 
 	magic_number = *(uint32_t *)((void *)(info.data_file));
-	ft_print_hexa_32(magic_number);// test 
+	// ft_print_hexa_32(magic_number);// test 
 	// ft_putstr_fd(info.filename, 2);
-	if (STATIC_LIB != *(uint64_t *)((void *)(info.data_file)))// add un check de la chaine
+	if (STATIC_LIB == *(uint64_t *)((void *)(info.data_file)))// add un check de la chaine
 	{
 		return(ft_core_static_lib(info));
 	}

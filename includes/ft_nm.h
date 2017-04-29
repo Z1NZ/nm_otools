@@ -6,6 +6,7 @@
 #include <mach-o/nlist.h>
 #include <mach-o/fat.h>
 #include <stdlib.h>
+#include <ar.h>
 #include <stdio.h>// printf("%s\n", );
 
 typedef struct		s_list
