@@ -1,11 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_core_32.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: srabah <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/04/30 22:39:04 by srabah            #+#    #+#             */
+/*   Updated: 2017/04/30 22:39:08 by srabah           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_nm.h"
 #include <unistd.h>
 
-
-static inline void	ft_nlist(struct symtab_command *sc, t_count count_f, t_file_info info)
+static inline void		ft_nlist(struct symtab_command *sc, t_count count_f, t_file_info info)
 {
-	char 						*string;
+	char						*string;
 	struct nlist				*tab;
 	unsigned long				i;
 	t_list						*p_list;
@@ -16,7 +26,7 @@ static inline void	ft_nlist(struct symtab_command *sc, t_count count_f, t_file_i
 	tab = (void *)((char *)info.data_file + sc->symoff);
 	string = info.data_file + sc->stroff;
 	i = 0;
-	while(i < sc->nsyms)
+	while (i < sc->nsyms)
 	{
 		if ((((char *)&tab[i]) - info.data_file) > info.data_stat.st_size)
 		{
@@ -24,7 +34,7 @@ static inline void	ft_nlist(struct symtab_command *sc, t_count count_f, t_file_i
 			return ;
 		}
 		if (tab[i].n_type & N_STAB)
-			 ;
+			;
 		else if ((tab[i].n_type & N_TYPE) || tab[i].n_type & N_EXT)
 		{
 			if (p_list == NULL)
@@ -34,7 +44,7 @@ static inline void	ft_nlist(struct symtab_command *sc, t_count count_f, t_file_i
 				h_list = p_list;
 			}
 			else
-			{	
+			{
 				if ((p_list->next = ft_memalloc(sizeof(t_list))) == NULL)
 					ft_error_errno("ft_memalloc", NULL);
 				p_list = p_list->next;
@@ -54,11 +64,10 @@ static inline void	ft_nlist(struct symtab_command *sc, t_count count_f, t_file_i
 	}
 }
 
-
-static inline	void		count_flag(t_count *count, struct load_command *lc, t_file_info info)
+static inline	void	count_flag(t_count *count, struct load_command *lc, t_file_info info)
 {
-	struct segment_command 	*sc;
-	struct section 			*s;
+	struct segment_command	*sc;
+	struct section			*s;
 	uint32_t				j;
 	uint32_t				len;
 
@@ -73,25 +82,24 @@ static inline	void		count_flag(t_count *count, struct load_command *lc, t_file_i
 			ft_error_recognized(info.filename);
 			return ;
 		}
-		if(!ft_strcmp(s[j].sectname, SECT_TEXT) && !ft_strcmp(s[j].segname, SEG_TEXT))
+		if (!ft_strcmp(s[j].sectname, SECT_TEXT) && !ft_strcmp(s[j].segname, SEG_TEXT))
 			count->text = count->k + 1;
-		else if(!ft_strcmp(s[j].sectname, SECT_DATA) && !ft_strcmp(s[j].segname, SEG_DATA))
+		else if (!ft_strcmp(s[j].sectname, SECT_DATA) && !ft_strcmp(s[j].segname, SEG_DATA))
 			count->data = count->k + 1;
-		else if(!ft_strcmp(s[j].sectname, SECT_BSS) && !ft_strcmp(s[j].segname, SEG_DATA))
+		else if (!ft_strcmp(s[j].sectname, SECT_BSS) && !ft_strcmp(s[j].segname, SEG_DATA))
 			count->bss = count->k + 1;
 		j++;
 		count->k++;
 	}
 }
 
-int	ft_core_32(t_file_info info)
+int						ft_core_32(t_file_info info)
 {
 	struct mach_header			*p_h;
-	struct load_command 		*p_lc;
+	struct load_command			*p_lc;
 	struct symtab_command		*p_sync;
 	uint32_t					i;
 	t_count						count_f;
-
 
 	p_h = (void *)info.data_file;
 	i = 0;
@@ -100,8 +108,7 @@ int	ft_core_32(t_file_info info)
 	count_f.bss = 0;
 	count_f.k = 0;
 	p_lc = (struct load_command *)(p_h + 1);
-
-	while(i < p_h->sizeofcmds)
+	while (i < p_h->sizeofcmds)
 	{
 		if (((char *)(p_lc) - info.data_file) > info.data_stat.st_size)
 		{
@@ -112,12 +119,12 @@ int	ft_core_32(t_file_info info)
 		{
 			p_sync = (void*)p_lc;
 			ft_nlist((void*)p_lc, count_f, info);
-			break;
+			break ;
 		}
 		if (p_lc->cmd == LC_SEGMENT)
 			count_flag(&count_f, p_lc, info);
 		p_lc = (void *)(((char *)p_lc) + p_lc->cmdsize);
 		++i;
 	}
-	return(0);
+	return (0);
 }

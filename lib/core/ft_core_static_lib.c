@@ -24,7 +24,7 @@ void				ft_push_mod_back(t_llib *lib, t_llib *tmp)
 	lib->next = tmp;
 }
 
-t_llib 		*ft_add_mod(t_file_info info, t_llib *lib, unsigned int len)
+t_llib 		*ft_add_mod(t_file_info info, t_llib *lib, uint32_t len)
 {
 	struct ar_hdr 	*ar;
 	int				i;
@@ -66,7 +66,12 @@ int		ft_core_static_lib(t_file_info info)
 		symdef += ft_get_size(ptr);
 		i =	*(uint32_t *) (void *)(symdef);
 		rlib = (struct dylib_table_of_contents *)(void *)(symdef + 4);
-		while((char *)rlib < (symdef + i))
+		if (((symdef + i) - info.data_file) > info.data_stat.st_size)
+		{
+			ft_error_recognized(info.filename);
+			return (1);
+		}
+		while ((char *)rlib < (symdef + i))
 		{
 
 			info.data_file += rlib->module_index;
