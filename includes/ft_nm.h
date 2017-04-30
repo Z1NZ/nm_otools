@@ -26,6 +26,13 @@ typedef struct		s_count
 	unsigned char	k;
 }					t_count;
 
+typedef	struct 		s_llib
+{
+	char			*ptr;
+	unsigned long	offset;
+	struct s_llib	*next;
+}					t_llib;
+
 typedef struct		s_file_info
 {
 	char			*data_file;
@@ -45,6 +52,7 @@ int		ft_openner(t_file_info info);
 */
 void	simple_print_64(t_list *ptr);
 void	simple_print_32(t_list *ptr);
+void	print_lib(t_file_info info, t_llib *lib);
 
 /*
 ** CORE
@@ -67,6 +75,9 @@ int		ft_core_static_lib(t_file_info info);
 /*
 ** TOOLS
 */
+void	ft_sort_lib(t_llib *lib);
+void	ft_push_mod_back(t_llib *lib, t_llib *tmp);
+t_llib	*ft_add_mod(t_file_info info, t_llib *lib, unsigned int len);
 int		ft_atoi(const char *str);
 int		ft_isspace(int c);
 int		ft_isdigit(int c);
