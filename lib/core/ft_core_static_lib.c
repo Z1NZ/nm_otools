@@ -79,7 +79,7 @@ int		ft_core_static_lib(t_file_info info)
 	{
 		ft_sort_lib(lib);
 		print_lib(info, lib);
-		// free list lib
+		free_lib(lib);
 	}
 	return(0);
 }

@@ -75,6 +75,7 @@ int		ft_core_static_lib(t_file_info info);
 /*
 ** TOOLS
 */
+void	free_lib(t_llib *lib);
 void	ft_sort_lib(t_llib *lib);
 void	ft_push_mod_back(t_llib *lib, t_llib *tmp);
 t_llib	*ft_add_mod(t_file_info info, t_llib *lib, unsigned int len);

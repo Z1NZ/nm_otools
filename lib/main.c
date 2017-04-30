@@ -43,6 +43,12 @@ int		main(int argc, char *argv[])
 	{
 		while(argv[i])
 		{
+			if (argc > 2)
+			{
+				ft_putstr("\n");
+				ft_putstr(argv[i]);
+				ft_putstr(":\n");
+			}
 			info.filename = argv[i];
 			ret = ft_openner(info);
 			info.filename = NULL;
