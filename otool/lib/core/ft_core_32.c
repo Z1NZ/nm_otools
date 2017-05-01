@@ -44,8 +44,8 @@ static int		section(struct segment_command *seg, t_file_info info)
 			ptr = (char *)(info.data_file + sect->offset);
 			i = 0;
 			j = sect->addr;
-			if (sect->size == 2)
-				jump = sect->size % (sect->align * sect->align);
+			if (sect->align == 2)
+				jump = sect->size % 4;
 			else
 				jump = 1;
 			while (i < sect->size)
