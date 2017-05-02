@@ -13,41 +13,32 @@
 #include "ft_otool.h"
 #include <unistd.h>
 
-static void		printer_nb(uint32_t offset, char *ptr, uint32_t len )
-{
-	while(len)
-	{
-		ft_print_hexa_uchar((unsigned char)ptr[offset]);
-		offset++;
-		len--;
-	}
-
-}
-
 static int		section(struct segment_command *seg, t_file_info info)
 {
 	char			*ptr;
 	uint32_t		i;
 	uint32_t		j;
-	uint32_t		jump;
 	struct section *sect;
+	uint32_t		size;
+
 
 	i = 0;
+	size = 0;
 	ptr = NULL;
 	sect = (void *)(seg + 1);
 	while(i < seg->nsects)
 	{
 		if (ft_strcmp(sect->sectname, SECT_TEXT) == 0 && ft_strcmp(sect->segname, SEG_TEXT) == 0)
 		{
-			ft_putstr(info.filename);
-			ft_putstr(":\nContents of (__TEXT,__text) section");
+			if (!info.fat)
+			{
+				ft_putstr(info.filename);
+				ft_putstr(":\n");
+			}
+			ft_putstr("Contents of (__TEXT,__text) section");
 			ptr = (char *)(info.data_file + sect->offset);
 			i = 0;
 			j = sect->addr;
-			if (sect->align == 2)
-				jump = sect->size % 4;
-			else
-				jump = 1;
 			while (i < sect->size)
 			{
 				if ((i % 16) == 0)
@@ -57,17 +48,9 @@ static int		section(struct segment_command *seg, t_file_info info)
 					ft_putstr("\t");
 					j += 16;
 				}
-				if (!jump)
-				{
-					printer_nb(i, ptr, 4);
-					i += 4;
-				}
-				else
-				{
-					ft_print_hexa_uchar((unsigned char)ptr[i]);
-					i++;
-				}
+				ft_print_hexa_uchar((unsigned char)ptr[i]);
 				ft_putstr(" ");
+				i++;
 			}
 			ft_putstr("\n");
 			return(0);

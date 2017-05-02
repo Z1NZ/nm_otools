@@ -36,9 +36,10 @@ typedef	struct		s_llib
 
 typedef struct		s_file_info
 {
-	char			*data_file;
 	struct stat		data_stat;
+	char			*data_file;
 	char			*filename;
+	uint64_t		fat;
 }					t_file_info;
 
 # define ERROR		" The file was not recognized as a valid object file\n\n"

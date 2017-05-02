@@ -40,47 +40,47 @@ int 	find_arch(t_file_info info)
 void	ft_print_sub_arm(cpu_subtype_t sub)
 {
 	if (sub == CPU_SUBTYPE_ARM_V7)
-		ft_putstr(" (for architecture armv7):\n");
+		ft_putstr(" (architecture armv7):\n");
 	else if (sub == CPU_SUBTYPE_ARM_V7S)
-		ft_putstr(" (for architecture armv7s):\n");
+		ft_putstr(" (architecture armv7s):\n");
 	else
-		ft_putstr(" (for architecture armv):\n");
+		ft_putstr(" (architecture armv):\n");
 }
 
 void	ft_print_sub_ppc(cpu_subtype_t sub)
 {
 	if (sub == CPU_SUBTYPE_POWERPC_ALL)
-		ft_putstr(" (for architecture ppc):\n");
+		ft_putstr(" (architecture ppc):\n");
 	else
-		ft_putstr(" (for architecture ):\n");
+		ft_putstr(":\n");
 }
 
 void	ft_print_arch(cpu_type_t type, cpu_subtype_t sub)
 {
 	if (type == CPU_TYPE_ANY)
-		ft_putstr(" (for architecture any):");
+		ft_putstr(" (architecture any):");
 	else if (type == CPU_TYPE_VAX)
-		ft_putstr(" (for architecture vax):\n");
+		ft_putstr(" (architecture vax):\n");
 	else if (type == CPU_TYPE_MC680x0)
-		ft_putstr(" (for architecture mc680x0):\n");
+		ft_putstr(" (architecture mc680x0):\n");
 	else if (type == CPU_TYPE_I386)
-		ft_putstr(" (for architecture i386):\n");
+		ft_putstr(" (architecture i386):\n");
 	else if (type == CPU_TYPE_MC98000)
-		ft_putstr(" (for architecture mc98000):");
+		ft_putstr(" (architecture mc98000):");
 	else if (type == CPU_TYPE_HPPA)
-		ft_putstr(" (for architecture hppa):\n");
+		ft_putstr(" (architecture hppa):\n");
 	else if (type == CPU_TYPE_ARM)
 		ft_print_sub_arm(sub);
 	else if (type == CPU_TYPE_ARM64)
-		ft_putstr(" (for architecture arm64):\n");
+		ft_putstr(" (architecture arm64):\n");
 	else if (type == CPU_TYPE_MC88000)
-		ft_putstr(" (for architecture mc88000):\n");
+		ft_putstr(" (architecture mc88000):\n");
 	else if (type == CPU_TYPE_SPARC)
-		ft_putstr(" (for architecture sparc):\n");
+		ft_putstr(" (architecture sparc):\n");
 	else if (type == CPU_TYPE_POWERPC)
 		ft_print_sub_ppc(sub);
 	else if (type == CPU_TYPE_POWERPC64)
-		ft_putstr(" (for architecture powerpc64):\n");
+		ft_putstr(" (architecture powerpc64):\n");
 }
 
 int		ft_core_fat_litle(t_file_info info)
@@ -96,11 +96,11 @@ int		ft_core_fat_litle(t_file_info info)
 	n_arch = endian_swap(p_fh->nfat_arch);
 	if (find_arch(info))
 		return (0);
+	info.fat = 1;
 	while(n_arch)
 	{
 		info.data_file += endian_swap(p_fa->offset);
 		p_h = (void *)info.data_file;
-		ft_putstr("\n");
 		ft_putstr(info.filename);
 		if (p_h->magic == MH_CIGAM || p_h->magic == MH_CIGAM_64)
 			ft_print_arch((cpu_type_t)endian_swap((unsigned int)p_h->cputype), (cpu_subtype_t)endian_swap((unsigned int)p_h->cpusubtype));
@@ -111,5 +111,6 @@ int		ft_core_fat_litle(t_file_info info)
 		++p_fa;
 		--n_arch;
 	}
+	info.fat = 0;
 	return (0);
 }

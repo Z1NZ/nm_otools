@@ -3,23 +3,12 @@
 #include <unistd.h>
 #include <stdio.h>
 
-static void		printer_nb(uint64_t offset, char *ptr, uint64_t len )
-{
-	while(len)
-	{
-		ft_print_hexa_uchar((unsigned char)ptr[offset]);
-		offset++;
-		len--;
-	}
-
-}
 
 static int		section64(struct segment_command_64 *seg, t_file_info info)
 {
 	char		*ptr;
 	uint64_t	i;
 	uint64_t	j;
-	uint32_t	jump;
 
 	struct section_64 *sect;
 	i = 0;
@@ -30,15 +19,15 @@ static int		section64(struct segment_command_64 *seg, t_file_info info)
 	{
 		if (ft_strcmp(sect->sectname, SECT_TEXT) == 0 && ft_strcmp(sect->segname, SEG_TEXT) == 0)
 		{
-			ft_putstr(info.filename);
-			ft_putstr(":\nContents of (__TEXT,__text) section");
+			if (!info.fat)
+			{
+				ft_putstr(info.filename);
+				ft_putstr(":\n");
+			}
+			ft_putstr("Contents of (__TEXT,__text) section");
 			ptr = (char *)(info.data_file + sect->offset);
 			j = sect->addr;
 			i = 0;
-			if (sect->align == 2)
-				jump = sect->size % 4;
-			else
-				jump = 1;
 			while (i < sect->size)
 			{
 				if ((i % 16) == 0)
@@ -48,16 +37,8 @@ static int		section64(struct segment_command_64 *seg, t_file_info info)
 					ft_putstr("\t");
 					j += 16;
 				}
-				if (!jump)
-				{
-					printer_nb(i, ptr, 4);
-					i += 4;
-				}
-				else
-				{
-					ft_print_hexa_uchar((unsigned char)ptr[i]);
-					i++;
-				}
+				ft_print_hexa_uchar((unsigned char)ptr[i]);
+				i++;
 				ft_putstr(" ");
 			}
 			ft_putstr("\n");

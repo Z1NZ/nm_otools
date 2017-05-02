@@ -21,9 +21,7 @@ int	ft_core(t_file_info info)
 	if (STATIC_LIB == *(uint64_t *)((void *)(info.data_file)))
 		return (ft_core_static_lib(info));
 	else if (magic_number == MH_MAGIC)
-	{
 		return (ft_core_32(info));
-	}
 	else if (magic_number == MH_CIGAM)
 		return (ft_core_32_litle(info));
 	else if (magic_number == MH_MAGIC_64)
