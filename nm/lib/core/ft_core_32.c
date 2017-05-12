@@ -13,7 +13,8 @@
 #include "ft_nm.h"
 #include <unistd.h>
 
-static inline void		ft_nlist(struct symtab_command *sc, t_count count_f, t_file_info info)
+static inline void	ft_nlist(struct symtab_command *sc, t_count count_f,
+	t_file_info info)
 {
 	char						*string;
 	struct nlist				*tab;
@@ -64,7 +65,8 @@ static inline void		ft_nlist(struct symtab_command *sc, t_count count_f, t_file_
 	}
 }
 
-static inline	void	count_flag(t_count *count, struct load_command *lc, t_file_info info)
+static inline void	count_flag(t_count *count, struct load_command *lc,
+	t_file_info info)
 {
 	struct segment_command	*sc;
 	struct section			*s;
@@ -93,7 +95,7 @@ static inline	void	count_flag(t_count *count, struct load_command *lc, t_file_in
 	}
 }
 
-int						ft_core_32(t_file_info info)
+int					ft_core_32(t_file_info info)
 {
 	struct mach_header			*p_h;
 	struct load_command			*p_lc;
@@ -103,18 +105,12 @@ int						ft_core_32(t_file_info info)
 
 	p_h = (void *)info.data_file;
 	i = 0;
-	count_f.text = 0;
-	count_f.data = 0;
-	count_f.bss = 0;
-	count_f.k = 0;
+	ft_memset(&count_f, 0, sizeof(t_count));
 	p_lc = (struct load_command *)(p_h + 1);
 	while (i < p_h->sizeofcmds)
 	{
 		if (((char *)(p_lc) - info.data_file) > info.data_stat.st_size)
-		{
-			ft_error_recognized(info.filename);
-			return (1);
-		}
+			return (ft_error_recognized(info.filename));
 		if (p_lc->cmd == LC_SYMTAB)
 		{
 			p_sync = (void*)p_lc;
