@@ -1,10 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_type.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: srabah <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/13 13:46:51 by srabah            #+#    #+#             */
+/*   Updated: 2017/05/13 13:46:53 by srabah           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_nm.h"
-
-
-// #define	N_ABS	0x2		/* absolute, n_sect == NO_SECT */
-
-
-
 
 char	get_type_64(struct nlist_64 *nl, t_count count)
 {
@@ -12,7 +18,7 @@ char	get_type_64(struct nlist_64 *nl, t_count count)
 
 	c = '?';
 	if ((nl->n_type & N_TYPE) == N_UNDF)
-	{	
+	{
 		c = 'u';
 		if (nl->n_value != 0)
 			c = 'c';
@@ -45,7 +51,7 @@ char	get_type(struct nlist *nl, t_count count)
 
 	c = '?';
 	if ((nl->n_type & N_TYPE) == N_UNDF)
-	{	
+	{
 		c = 'u';
 		if (nl->n_value != 0)
 			c = 'c';
