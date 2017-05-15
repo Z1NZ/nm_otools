@@ -12,7 +12,19 @@
 
 #include "ft_nm.h"
 
-static inline char	flag_type(struct nlist_64 *nl, t_count count)
+static inline char	flag_type_64(struct nlist_64 *nl, t_count count)
+{
+	if (nl->n_sect == count.text)
+		return ('t');
+	else if (nl->n_sect == count.data)
+		return ('d');
+	else if (nl->n_sect == count.bss)
+		return ('b');
+	else
+		return ('s');
+}
+
+static inline char	flag_type(struct nlist *nl, t_count count)
 {
 	if (nl->n_sect == count.text)
 		return ('t');
@@ -38,7 +50,7 @@ char				get_type_64(struct nlist_64 *nl, t_count count)
 	else if ((nl->n_type & N_TYPE) == N_ABS)
 		c = 'a';
 	else if ((nl->n_type & N_TYPE) == N_SECT)
-		c = flag_type(nl, count);
+		c = flag_type_64(nl, count);
 	else if ((nl->n_type & N_TYPE) == N_PBUD)
 		c = 'u';
 	else if ((nl->n_type & N_TYPE) == N_INDR)
