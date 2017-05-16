@@ -83,6 +83,7 @@ int					ft_core_static_lib(t_file_info info);
 /*
 ** TOOLS
 */
+void				ft_put_2_str(char *s, char *s1);
 void				free_lib(t_llib *lib);
 void				ft_sort_lib(t_llib *lib);
 void				ft_push_mod_back(t_llib *lib, t_llib *tmp);

@@ -85,34 +85,34 @@ static void					ft_nlist(struct symtab_command *sc,
 	}
 }
 
-static inline	void		count_flag_64(t_count *count,
+static inline	int			count_flag_64(t_count *count,
 	struct load_command *lc, t_file_info info)
 {
 	struct segment_command_64	*sc;
 	struct section_64			*s;
-	uint32_t					j;
-	uint32_t					len;
+	uint32_t					i[2];
 
 	sc = (void *)lc;
 	s = (void*)((char *)(sc + 1));
-	j = 0;
-	len = endian_swap(sc->nsects);
-	while (j < len)
+	i[0] = 0;
+	i[1] = endian_swap(sc->nsects);
+	while (i[0] < i[1])
 	{
-		if ((((char *)&(s[j])) - info.data_file) > info.data_stat.st_size)
-		{
-			ft_error_recognized(info.filename);
-			return ;
-		}
-		if (!ft_strcmp(s[j].sectname, SECT_TEXT) && !ft_strcmp(s[j].segname, SEG_TEXT))
+		if ((((char *)&(s[i[0]])) - info.data_file) > info.data_stat.st_size)
+			return (ft_error_recognized(info.filename));
+		if (!ft_strcmp(s[i[0]].sectname, SECT_TEXT) &&
+			!ft_strcmp(s[i[0]].segname, SEG_TEXT))
 			count->text = count->k + 1;
-		else if (!ft_strcmp(s[j].sectname, SECT_DATA) && !ft_strcmp(s[j].segname, SEG_DATA))
+		else if (!ft_strcmp(s[i[0]].sectname, SECT_DATA) &&
+			!ft_strcmp(s[i[0]].segname, SEG_DATA))
 			count->data = count->k + 1;
-		else if (!ft_strcmp(s[j].sectname, SECT_BSS) && !ft_strcmp(s[j].segname, SEG_DATA))
+		else if (!ft_strcmp(s[i[0]].sectname, SECT_BSS) &&
+			!ft_strcmp(s[i[0]].segname, SEG_DATA))
 			count->bss = count->k + 1;
-		j++;
+		i[0]++;
 		count->k++;
 	}
+	return (0);
 }
 
 int							ft_core_64_litle(t_file_info info)
@@ -134,10 +134,7 @@ int							ft_core_64_litle(t_file_info info)
 	while (i < len)
 	{
 		if (((char *)(p_lc) - info.data_file) > info.data_stat.st_size)
-		{
-			ft_error_recognized(info.filename);
-			return (1);
-		}
+			return (ft_error_recognized(info.filename));
 		if (endian_swap(p_lc->cmd) == LC_SYMTAB)
 		{
 			ft_nlist((void*)p_lc, info, count_f);

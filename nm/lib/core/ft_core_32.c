@@ -65,34 +65,34 @@ static inline void	ft_nlist(struct symtab_command *sc, t_count count_f,
 	}
 }
 
-static inline void	count_flag(t_count *count, struct load_command *lc,
+static inline int	count_flag(t_count *count, struct load_command *lc,
 	t_file_info info)
 {
 	struct segment_command	*sc;
 	struct section			*s;
-	uint32_t				j;
-	uint32_t				len;
+	uint32_t				i[2];
 
 	sc = (void *)lc;
 	s = (void *)(sc + 1);
-	j = 0;
-	len = sc->nsects;
-	while (j < len)
+	i[0] = 0;
+	i[1] = sc->nsects;
+	while (i[0] < i[1])
 	{
-		if ((((char *)&(s[j])) - info.data_file) > info.data_stat.st_size)
-		{
-			ft_error_recognized(info.filename);
-			return ;
-		}
-		if (!ft_strcmp(s[j].sectname, SECT_TEXT) && !ft_strcmp(s[j].segname, SEG_TEXT))
+		if ((((char *)&(s[i[0]])) - info.data_file) > info.data_stat.st_size)
+			return (ft_error_recognized(info.filename));
+		if (!ft_strcmp(s[i[0]].sectname, SECT_TEXT) &&
+			!ft_strcmp(s[i[0]].segname, SEG_TEXT))
 			count->text = count->k + 1;
-		else if (!ft_strcmp(s[j].sectname, SECT_DATA) && !ft_strcmp(s[j].segname, SEG_DATA))
+		else if (!ft_strcmp(s[i[0]].sectname, SECT_DATA) &&
+			!ft_strcmp(s[i[0]].segname, SEG_DATA))
 			count->data = count->k + 1;
-		else if (!ft_strcmp(s[j].sectname, SECT_BSS) && !ft_strcmp(s[j].segname, SEG_DATA))
+		else if (!ft_strcmp(s[i[0]].sectname, SECT_BSS) &&
+			!ft_strcmp(s[i[0]].segname, SEG_DATA))
 			count->bss = count->k + 1;
-		j++;
+		i[0]++;
 		count->k++;
 	}
+	return (0);
 }
 
 int					ft_core_32(t_file_info info)

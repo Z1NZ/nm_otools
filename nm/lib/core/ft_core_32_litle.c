@@ -1,21 +1,33 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_core_32_litle.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: srabah <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/16 14:52:08 by srabah            #+#    #+#             */
+/*   Updated: 2017/05/16 14:52:09 by srabah           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_nm.h"
 #include <unistd.h>
 
-static inline unsigned int endian_swap(unsigned int x)
+static inline unsigned int	endian_swap(unsigned int x)
 {
-	x = (x>>(unsigned int)24) | 
-		((x<<(unsigned int)8) & 0x00FF0000) |
-		((x>>(unsigned int)8) & 0x0000FF00) |
-		(x<<(unsigned int)24);
-		return (x);
+	x = (x >> (unsigned int)24) |
+		((x << (unsigned int)8) & 0x00FF0000) |
+		((x >> (unsigned int)8) & 0x0000FF00) |
+		(x << (unsigned int)24);
+	return (x);
 }
 
-static void	ft_nlist(struct symtab_command *sc, t_count count_f, t_file_info info)
+static void					ft_nlist(struct symtab_command *sc,
+	t_count count_f, t_file_info info)
 {
-	char 						*string;
+	char						*string;
 	struct nlist				*tab;
-	unsigned long				i;
-	unsigned long				len;
+	unsigned long				i[2];
 	t_list						*p_list;
 	t_list						*h_list;
 
@@ -23,19 +35,19 @@ static void	ft_nlist(struct symtab_command *sc, t_count count_f, t_file_info inf
 	h_list = NULL;
 	tab = (void *)((char *)info.data_file + endian_swap(sc->symoff));
 	string = info.data_file + endian_swap(sc->stroff);
-	i = 0;
-	len = endian_swap(sc->nsyms);
-	while(i < len)
+	i[0] = 0;
+	i[1] = endian_swap(sc->nsyms);
+	while (i[0] < i[1])
 	{
-		if ((((char *)&tab[i]) - info.data_file) > info.data_stat.st_size)
+		if ((((char *)&tab[i[0]]) - info.data_file) > info.data_stat.st_size)
 		{
 			ft_error_recognized(info.filename);
 			ft_free_list_litle(h_list);
 			return ;
 		}
-		if (tab[i].n_type & N_STAB)
-			 ;
-		else if ((tab[i].n_type & N_TYPE) || tab[i].n_type & N_EXT)
+		if (tab[i[0]].n_type & N_STAB)
+			;
+		else if ((tab[i[0]].n_type & N_TYPE) || tab[i[0]].n_type & N_EXT)
 		{
 			if (h_list == NULL)
 			{
@@ -49,12 +61,12 @@ static void	ft_nlist(struct symtab_command *sc, t_count count_f, t_file_info inf
 					ft_error_errno("ft_memalloc", NULL);
 				p_list = p_list->next;
 			}
-			p_list->n_value = endian_swap(tab[i].n_value);
-			p_list->type = get_type(&tab[i], count_f);
-			p_list->ptr = (string + endian_swap(tab[i].n_un.n_strx));
+			p_list->n_value = endian_swap(tab[i[0]].n_value);
+			p_list->type = get_type(&tab[i[0]], count_f);
+			p_list->ptr = (string + endian_swap(tab[i[0]].n_un.n_strx));
 			p_list->ptr = p_list->ptr;
 		}
-		i++;
+		i[0]++;
 	}
 	p_list = NULL;
 	if (h_list)
@@ -65,40 +77,40 @@ static void	ft_nlist(struct symtab_command *sc, t_count count_f, t_file_info inf
 	}
 }
 
-
-static inline	void		count_flag(t_count *count, struct load_command *lc, t_file_info info)
+static inline int			count_flag(t_count *count,
+	struct load_command *lc, t_file_info info)
 {
-	struct segment_command 	*sc;
-	struct section 			*s;
-	uint32_t				j;
-	uint32_t				len;
+	struct segment_command	*sc;
+	struct section			*s;
+	uint32_t				i[2];
 
 	sc = (void *)lc;
 	s = (void *)(sc + 1);
-	j = 0;
-	len = endian_swap(sc->nsects);
-	while (j < len)
+	i[0] = 0;
+	i[1] = endian_swap(sc->nsects);
+	while (i[0] < i[1])
 	{
-		if ((((char *)&(s[j])) - info.data_file) > info.data_stat.st_size)
-		{
-			ft_error_recognized(info.filename);
-			return ;
-		}
-		if(!ft_strcmp(s[j].sectname, SECT_TEXT) && !ft_strcmp(s[j].segname, SEG_TEXT))
+		if ((((char *)&(s[i[0]])) - info.data_file) > info.data_stat.st_size)
+			return (ft_error_recognized(info.filename));
+		if (!ft_strcmp(s[i[0]].sectname, SECT_TEXT) &&
+			!ft_strcmp(s[i[0]].segname, SEG_TEXT))
 			count->text = count->k + 1;
-		else if(!ft_strcmp(s[j].sectname, SECT_DATA) && !ft_strcmp(s[j].segname, SEG_DATA))
+		else if (!ft_strcmp(s[i[0]].sectname, SECT_DATA) &&
+			!ft_strcmp(s[i[0]].segname, SEG_DATA))
 			count->data = count->k + 1;
-		else if(!ft_strcmp(s[j].sectname, SECT_BSS) && !ft_strcmp(s[j].segname, SEG_DATA))
+		else if (!ft_strcmp(s[i[0]].sectname, SECT_BSS) &&
+			!ft_strcmp(s[i[0]].segname, SEG_DATA))
 			count->bss = count->k + 1;
-		j++;
+		i[0]++;
 		count->k++;
 	}
+	return (0);
 }
 
-int		ft_core_32_litle(t_file_info info)
+int							ft_core_32_litle(t_file_info info)
 {
 	struct mach_header			*p_h;
-	struct load_command 		*p_lc;
+	struct load_command			*p_lc;
 	uint32_t					i;
 	uint32_t					len;
 	t_count						count_f;
@@ -107,27 +119,20 @@ int		ft_core_32_litle(t_file_info info)
 	i = 0;
 	p_lc = (struct load_command *)(p_h + 1);
 	len = endian_swap(p_h->sizeofcmds);
-	count_f.text = 0;
-	count_f.data = 0;
-	count_f.bss = 0;
-	count_f.k = 0;
-	while(i < len)
+	ft_memset(&count_f, 0, sizeof(t_count));
+	while (i < len)
 	{
 		if (((char *)(p_lc) - info.data_file) > info.data_stat.st_size)
-		{
-			ft_error_recognized(info.filename);
-			return (1);
-		}
+			return (ft_error_recognized(info.filename));
 		if (endian_swap(p_lc->cmd) == LC_SYMTAB)
 		{
-
 			ft_nlist((void*)p_lc, count_f, info);
-			break;
+			break ;
 		}
- 		if (endian_swap(p_lc->cmd)  == LC_SEGMENT)
- 			count_flag(&count_f, p_lc, info);
+		if (endian_swap(p_lc->cmd) == LC_SEGMENT)
+			count_flag(&count_f, p_lc, info);
 		p_lc = (void *)(((char *)p_lc) + endian_swap(p_lc->cmdsize));
 		++i;
 	}
-	return(0);
+	return (0);
 }

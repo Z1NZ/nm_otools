@@ -109,8 +109,7 @@ int							ft_core_fat_litle(t_file_info info)
 	{
 		info.data_file += endian_swap(p_fa->offset);
 		p_h = (void *)info.data_file;
-		ft_putstr("\n");
-		ft_putstr(info.filename);
+		ft_put_2_str("\n", info.filename);
 		if (p_h->magic == MH_CIGAM || p_h->magic == MH_CIGAM_64)
 			ft_print_arch((cpu_type_t)endian_swap((unsigned int)p_h->cputype),
 					(cpu_subtype_t)endian_swap((unsigned int)p_h->cpusubtype));
