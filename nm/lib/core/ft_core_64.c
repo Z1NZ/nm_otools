@@ -14,7 +14,7 @@
 #include <unistd.h>
 #include <stdio.h>
 
-static inline void	ft_nlist_64(struct symtab_command *sc,
+static inline int	ft_nlist_64(struct symtab_command *sc,
 	t_count count_f, t_file_info info)
 {
 	char						*string;
@@ -31,10 +31,7 @@ static inline void	ft_nlist_64(struct symtab_command *sc,
 	while (i < sc->nsyms)
 	{
 		if ((((char *)&tab[i]) - info.data_file) > info.data_stat.st_size)
-		{
-			ft_error_recognized(info.filename);
-			return ;
-		}
+			return (ft_error_recognized(info.filename));
 		if (tab[i].n_type & N_STAB)
 			;
 		else if ((tab[i].n_type & N_TYPE) || tab[i].n_type & N_EXT)
@@ -58,12 +55,8 @@ static inline void	ft_nlist_64(struct symtab_command *sc,
 		i++;
 	}
 	p_list = NULL;
-	if (h_list)
-	{
-		sort_list(h_list);
-		simple_print_64(h_list);
-		ft_free_list(h_list);
-	}
+	list_display_64(h_list);
+	return (1);
 }
 
 static inline int	count_flag_64(t_count *count,
@@ -104,18 +97,12 @@ int					ft_core_64(t_file_info info)
 
 	p_h = (void *)info.data_file;
 	i = 0;
-	count_f.text = 0;
-	count_f.data = 0;
-	count_f.bss = 0;
-	count_f.k = 0;
+	ft_memset(&count_f, 0, sizeof(t_count));
 	p_lc = (struct load_command *)(p_h + 1);
 	while (i < p_h->sizeofcmds)
 	{
 		if (((char *)(p_lc) - info.data_file) > info.data_stat.st_size)
-		{
-			ft_error_recognized(info.filename);
-			return (1);
-		}
+			return (ft_error_recognized(info.filename));
 		if (p_lc->cmd == LC_SYMTAB)
 		{
 			ft_nlist_64((void*)p_lc, count_f, info);

@@ -33,7 +33,7 @@ int							ft_core_fat(t_file_info info)
 	n_arch = p_fh->nfat_arch;
 	if (find_arch(info))
 		return (0);
-	while (n_arch)
+	while (n_arch--)
 	{
 		info.data_file += p_fa->offset;
 		p_h = (void *)info.data_file;
@@ -46,7 +46,6 @@ int							ft_core_fat(t_file_info info)
 		ft_core(info);
 		info.data_file -= p_fa->offset;
 		++p_fa;
-		--n_arch;
 	}
 	return (0);
 }

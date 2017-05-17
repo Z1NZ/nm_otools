@@ -77,12 +77,7 @@ static void					ft_nlist(struct symtab_command *sc,
 		i[0]++;
 	}
 	p_list = NULL;
-	if (h_list)
-	{
-		sort_list(h_list);
-		simple_print_32(h_list);
-		ft_free_list(h_list);
-	}
+	list_display_64(h_list);
 }
 
 static inline	int			count_flag_64(t_count *count,
@@ -127,11 +122,8 @@ int							ft_core_64_litle(t_file_info info)
 	i = 0;
 	p_lc = (struct load_command *)(p_h + 1);
 	len = endian_swap(p_h->sizeofcmds);
-	count_f.text = 0;
-	count_f.data = 0;
-	count_f.bss = 0;
-	count_f.k = 0;
-	while (i < len)
+	ft_memset(&count_f, 0, sizeof(t_count));
+	while (i++ < len)
 	{
 		if (((char *)(p_lc) - info.data_file) > info.data_stat.st_size)
 			return (ft_error_recognized(info.filename));
@@ -143,7 +135,6 @@ int							ft_core_64_litle(t_file_info info)
 		if (endian_swap(p_lc->cmd) == LC_SEGMENT_64)
 			count_flag_64(&count_f, p_lc, info);
 		p_lc = (void *)(((char *)p_lc) + endian_swap(p_lc->cmdsize));
-		++i;
 	}
 	return (0);
 }

@@ -58,15 +58,25 @@ t_llib		*ft_add_mod(t_file_info info, t_llib *lib, uint32_t len)
 	}
 }
 
+static int	ft_display_lib(t_file_info info, t_llib *lib)
+{
+	if (lib)
+	{
+		ft_sort_lib(lib);
+		print_lib(info, lib);
+		free_lib(lib);
+	}
+	return (0);
+}
+
 int			ft_core_static_lib(t_file_info info)
 {
 	struct ar_hdr					*ptr;
-	struct dylib_table_of_contents *rlib;
+	struct dylib_table_of_contents	*rlib;
 	char							*symdef;
 	uint32_t						i;
 	t_llib							*lib;
 
-	symdef = NULL;
 	lib = NULL;
 	i = 0;
 	ptr = (void*)((char *)info.data_file + 8);
@@ -77,23 +87,13 @@ int			ft_core_static_lib(t_file_info info)
 		i = *(uint32_t *)(void *)(symdef);
 		rlib = (struct dylib_table_of_contents *)(void *)(symdef + 4);
 		if (((symdef + i) - info.data_file) > info.data_stat.st_size)
-		{
-			ft_error_recognized(info.filename);
-			return (1);
-		}
-		while ((char *)rlib < (symdef + i))
+			return (ft_error_recognized(info.filename));
+		while ((char *)rlib++ < (symdef + i))
 		{
 			info.data_file += rlib->module_index;
 			lib = ft_add_mod(info, lib, rlib->module_index);
 			info.data_file -= rlib->module_index;
-			rlib++;
 		}
 	}
-	if (lib)
-	{
-		ft_sort_lib(lib);
-		print_lib(info, lib);
-		free_lib(lib);
-	}
-	return (0);
+	return (ft_display_lib(info, lib));
 }

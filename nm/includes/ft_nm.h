@@ -61,7 +61,8 @@ int					ft_openner(t_file_info info);
 void				simple_print_64(t_list *ptr);
 void				simple_print_32(t_list *ptr);
 void				print_lib(t_file_info info, t_llib *lib);
-
+void				list_display(t_list *h_list);
+void				list_display_64(t_list *h_list);
 /*
 ** CORE
 */

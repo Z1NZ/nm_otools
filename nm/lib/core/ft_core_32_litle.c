@@ -27,7 +27,7 @@ static void					ft_nlist(struct symtab_command *sc,
 {
 	char						*string;
 	struct nlist				*tab;
-	unsigned long				i[2];
+	long						i[2];
 	t_list						*p_list;
 	t_list						*h_list;
 
@@ -35,9 +35,9 @@ static void					ft_nlist(struct symtab_command *sc,
 	h_list = NULL;
 	tab = (void *)((char *)info.data_file + endian_swap(sc->symoff));
 	string = info.data_file + endian_swap(sc->stroff);
-	i[0] = 0;
+	i[0] = -1;
 	i[1] = endian_swap(sc->nsyms);
-	while (i[0] < i[1])
+	while (++i[0] < i[1])
 	{
 		if ((((char *)&tab[i[0]]) - info.data_file) > info.data_stat.st_size)
 		{
@@ -66,15 +66,9 @@ static void					ft_nlist(struct symtab_command *sc,
 			p_list->ptr = (string + endian_swap(tab[i[0]].n_un.n_strx));
 			p_list->ptr = p_list->ptr;
 		}
-		i[0]++;
 	}
 	p_list = NULL;
-	if (h_list)
-	{
-		sort_list(h_list);
-		simple_print_32(h_list);
-		ft_free_list(h_list);
-	}
+	list_display(h_list);
 }
 
 static inline int			count_flag(t_count *count,
@@ -120,7 +114,7 @@ int							ft_core_32_litle(t_file_info info)
 	p_lc = (struct load_command *)(p_h + 1);
 	len = endian_swap(p_h->sizeofcmds);
 	ft_memset(&count_f, 0, sizeof(t_count));
-	while (i < len)
+	while (i++ < len)
 	{
 		if (((char *)(p_lc) - info.data_file) > info.data_stat.st_size)
 			return (ft_error_recognized(info.filename));
@@ -132,7 +126,6 @@ int							ft_core_32_litle(t_file_info info)
 		if (endian_swap(p_lc->cmd) == LC_SEGMENT)
 			count_flag(&count_f, p_lc, info);
 		p_lc = (void *)(((char *)p_lc) + endian_swap(p_lc->cmdsize));
-		++i;
 	}
 	return (0);
 }

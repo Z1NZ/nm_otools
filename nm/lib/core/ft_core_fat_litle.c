@@ -21,32 +21,6 @@ static inline unsigned int	endian_swap(unsigned int x)
 	return (x);
 }
 
-int							find_arch(t_file_info info)
-{
-	struct fat_header	*p_fh;
-	struct fat_arch		*p_fa;
-	uint32_t			n_arch;
-	struct mach_header	*p_h;
-
-	p_fh = (void *)info.data_file;
-	p_fa = (void *)(p_fh + 1);
-	n_arch = endian_swap(p_fh->nfat_arch);
-	while (n_arch)
-	{
-		info.data_file += endian_swap(p_fa->offset);
-		p_h = (void *)info.data_file;
-		if (p_h->cputype == CPU_TYPE_X86_64)
-		{
-			ft_core(info);
-			return (1);
-		}
-		info.data_file -= endian_swap(p_fa->offset);
-		++p_fa;
-		--n_arch;
-	}
-	return (0);
-}
-
 void						ft_print_sub_arm(cpu_subtype_t sub)
 {
 	if (sub == CPU_SUBTYPE_ARM_V7)
@@ -105,7 +79,7 @@ int							ft_core_fat_litle(t_file_info info)
 	n_arch = endian_swap(p_fh->nfat_arch);
 	if (find_arch(info))
 		return (0);
-	while (n_arch)
+	while (n_arch--)
 	{
 		info.data_file += endian_swap(p_fa->offset);
 		p_h = (void *)info.data_file;
@@ -118,7 +92,6 @@ int							ft_core_fat_litle(t_file_info info)
 		ft_core(info);
 		info.data_file -= endian_swap(p_fa->offset);
 		++p_fa;
-		--n_arch;
 	}
 	return (0);
 }

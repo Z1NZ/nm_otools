@@ -13,12 +13,12 @@
 #include "ft_nm.h"
 #include <unistd.h>
 
-static inline void	ft_nlist(struct symtab_command *sc, t_count count_f,
+static inline int	ft_nlist(struct symtab_command *sc, t_count count_f,
 	t_file_info info)
 {
 	char						*string;
 	struct nlist				*tab;
-	unsigned long				i;
+	long						i;
 	t_list						*p_list;
 	t_list						*h_list;
 
@@ -26,14 +26,11 @@ static inline void	ft_nlist(struct symtab_command *sc, t_count count_f,
 	h_list = NULL;
 	tab = (void *)((char *)info.data_file + sc->symoff);
 	string = info.data_file + sc->stroff;
-	i = 0;
-	while (i < sc->nsyms)
+	i = -1;
+	while (++i < sc->nsyms)
 	{
 		if ((((char *)&tab[i]) - info.data_file) > info.data_stat.st_size)
-		{
-			ft_error_recognized(info.filename);
-			return ;
-		}
+			return (ft_error_recognized(info.filename));
 		if (tab[i].n_type & N_STAB)
 			;
 		else if ((tab[i].n_type & N_TYPE) || tab[i].n_type & N_EXT)
@@ -54,15 +51,10 @@ static inline void	ft_nlist(struct symtab_command *sc, t_count count_f,
 			p_list->type = get_type(&tab[i], count_f);
 			p_list->ptr = string + tab[i].n_un.n_strx;
 		}
-		i++;
 	}
 	p_list = NULL;
-	if (h_list)
-	{
-		sort_list(h_list);
-		simple_print_32(h_list);
-		ft_free_list(h_list);
-	}
+	list_display(h_list);
+	return (1);
 }
 
 static inline int	count_flag(t_count *count, struct load_command *lc,
@@ -99,7 +91,6 @@ int					ft_core_32(t_file_info info)
 {
 	struct mach_header			*p_h;
 	struct load_command			*p_lc;
-	struct symtab_command		*p_sync;
 	uint32_t					i;
 	t_count						count_f;
 
@@ -113,7 +104,6 @@ int					ft_core_32(t_file_info info)
 			return (ft_error_recognized(info.filename));
 		if (p_lc->cmd == LC_SYMTAB)
 		{
-			p_sync = (void*)p_lc;
 			ft_nlist((void*)p_lc, count_f, info);
 			break ;
 		}
