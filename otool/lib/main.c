@@ -5,14 +5,15 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: srabah <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/04/30 22:00:05 by srabah            #+#    #+#             */
-/*   Updated: 2017/04/30 22:00:07 by srabah           ###   ########.fr       */
+/*   Created: 2017/05/20 19:47:59 by srabah            #+#    #+#             */
+/*   Updated: 2017/05/20 19:48:21 by srabah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_otool.h"
 #include <unistd.h>
 #include <fcntl.h>
+#define ERROR_FILE ("error: ft_otool: at least one file must be specified\n"
 
 int		ft_openner(t_file_info info)
 {
@@ -57,6 +58,6 @@ int		main(int argc, char *argv[])
 			ft_memset(&info, '\0', sizeof(t_file_info));
 		}
 	else
-		ft_putstr_fd("error: ft_otool: at least one file must be specified\n", 2);
+		ft_putstr_fd(ERROR_FILE, 2);
 	return (ret);
 }

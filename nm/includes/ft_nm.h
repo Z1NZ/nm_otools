@@ -84,6 +84,7 @@ int					ft_core_static_lib(t_file_info info);
 /*
 ** TOOLS
 */
+t_list				*new_list(t_list *p_list, t_list **h_list);
 void				ft_put_2_str(char *s, char *s1);
 void				free_lib(t_llib *lib);
 void				ft_sort_lib(t_llib *lib);
@@ -115,7 +116,7 @@ void				ft_print_hexa_64(unsigned long long number);
 void				ft_print_hexa_32(unsigned long number);
 void				ft_put_n_char(char *ptr, size_t nb);
 void				ft_error_st_mode(mode_t st_mode, char *name);
-void				ft_error_errno(char *ptr, char *name);
+void				*ft_error_errno(char *ptr, char *name);
 void				ft_putstr(char *s);
 void				ft_putstr_fd(const char *const s, int fd);
 size_t				ft_strlen(const char *const s);

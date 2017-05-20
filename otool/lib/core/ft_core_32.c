@@ -13,22 +13,22 @@
 #include "ft_otool.h"
 #include <unistd.h>
 
-static int		section(struct segment_command *seg, t_file_info info)
+static int				section(struct segment_command *seg, t_file_info info)
 {
 	char			*ptr;
 	uint32_t		i;
 	uint32_t		j;
-	struct section *sect;
+	struct section	*sect;
 	uint32_t		size;
-
 
 	i = 0;
 	size = 0;
 	ptr = NULL;
 	sect = (void *)(seg + 1);
-	while(i < seg->nsects)
+	while (i < seg->nsects)
 	{
-		if (ft_strcmp(sect->sectname, SECT_TEXT) == 0 && ft_strcmp(sect->segname, SEG_TEXT) == 0)
+		if (ft_strcmp(sect->sectname, SECT_TEXT) == 0 &&
+			ft_strcmp(sect->segname, SEG_TEXT) == 0)
 		{
 			if (!info.fat)
 			{
@@ -53,12 +53,12 @@ static int		section(struct segment_command *seg, t_file_info info)
 				i++;
 			}
 			ft_putstr("\n");
-			return(0);
+			return (0);
 		}
 		sect = (void *)(sect + 1);
 		i++;
 	}
-	return(1);
+	return (1);
 }
 
 int						ft_core_32(t_file_info info)

@@ -13,49 +13,33 @@
 #include "ft_nm.h"
 #include <unistd.h>
 #include <stdio.h>
+#define T_TYPE tab[i].n_type
 
 static inline int	ft_nlist_64(struct symtab_command *sc,
 	t_count count_f, t_file_info info)
 {
-	char						*string;
 	struct nlist_64				*tab;
-	unsigned long				i;
-	t_list						*p_list;
-	t_list						*h_list;
+	long						i;
+	t_list						*p_list[2];
 
-	p_list = NULL;
-	h_list = NULL;
+	p_list[0] = NULL;
+	p_list[1] = NULL;
 	tab = (void *)(info.data_file + sc->symoff);
-	string = info.data_file + sc->stroff;
-	i = 0;
-	while (i < sc->nsyms)
+	i = -1;
+	while (++i < sc->nsyms)
 	{
 		if ((((char *)&tab[i]) - info.data_file) > info.data_stat.st_size)
 			return (ft_error_recognized(info.filename));
-		if (tab[i].n_type & N_STAB)
-			;
-		else if ((tab[i].n_type & N_TYPE) || tab[i].n_type & N_EXT)
+		else if (!(T_TYPE & N_STAB) && ((T_TYPE & N_TYPE) || T_TYPE & N_EXT))
 		{
-			if (p_list == NULL)
-			{
-				if ((p_list = ft_memalloc(sizeof(t_list))) == NULL)
-					ft_error_errno("ft_memalloc", NULL);
-				h_list = p_list;
-			}
-			else
-			{
-				if ((p_list->next = ft_memalloc(sizeof(t_list))) == NULL)
-					ft_error_errno("ft_memalloc", NULL);
-				p_list = p_list->next;
-			}
-			p_list->n_value = tab[i].n_value;
-			p_list->type = get_type_64(&tab[i], count_f);
-			p_list->ptr = string + tab[i].n_un.n_strx;
+			p_list[0] = new_list(p_list[0], &p_list[1]);
+			p_list[0]->n_value = tab[i].n_value;
+			p_list[0]->type = get_type_64(&tab[i], count_f);
+			p_list[0]->ptr = info.data_file + sc->stroff + tab[i].n_un.n_strx;
 		}
-		i++;
 	}
-	p_list = NULL;
-	list_display_64(h_list);
+	p_list[0] = NULL;
+	list_display_64(p_list[1]);
 	return (1);
 }
 

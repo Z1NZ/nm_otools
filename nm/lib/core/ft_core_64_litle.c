@@ -12,6 +12,7 @@
 
 #include "ft_nm.h"
 #include <unistd.h>
+#define T_TYPE tab[i[0]].n_type
 
 static inline uint64_t		endian_swap_long(uint64_t x)
 {
@@ -34,50 +35,31 @@ static inline unsigned int	endian_swap(unsigned int x)
 static void					ft_nlist(struct symtab_command *sc,
 	t_file_info info, t_count count_f)
 {
-	char						*string;
 	struct nlist_64				*tab;
-	unsigned long				i[2];
-	t_list						*p_list;
-	t_list						*h_list;
+	long						i[2];
+	t_list						*p_list[2];
 
-	p_list = NULL;
-	h_list = NULL;
+	p_list[0] = NULL;
+	p_list[1] = NULL;
 	tab = (void *)((char *)info.data_file + endian_swap(sc->symoff));
-	string = info.data_file + endian_swap(sc->stroff);
-	i[0] = 0;
+	i[0] = -1;
 	i[1] = endian_swap(sc->nsyms);
-	while (i[0] < i[1])
+	while (++i[0] < i[1])
 	{
 		if ((((char *)&tab[i[0]]) - info.data_file) > info.data_stat.st_size)
+			return (ft_error_recognized(info.filename));
+		else if (!(T_TYPE & N_STAB) && ((T_TYPE & N_TYPE) || T_TYPE & N_EXT))
 		{
-			ft_error_recognized(info.filename);
-			return ;
+			p_list[0] = new_list(p_list[0], &p_list[1]);
+			p_list[0]->n_value = endian_swap_long(tab[i[0]].n_value);
+			p_list[0]->type = get_type_64(&tab[i[0]], count_f);
+			p_list[0]->ptr = (info.data_file + endian_swap(sc->stroff) +
+				endian_swap(tab[i[0]].n_un.n_strx));
+			p_list[0]->ptr = p_list[0]->ptr;
 		}
-		if (tab[i[0]].n_type & N_STAB)
-			;
-		else if ((tab[i[0]].n_type & N_TYPE) || tab[i[0]].n_type & N_EXT)
-		{
-			if (p_list == NULL)
-			{
-				if ((p_list = ft_memalloc(sizeof(t_list))) == NULL)
-					ft_error_errno("ft_memalloc", NULL);
-				h_list = p_list;
-			}
-			else
-			{
-				if ((p_list->next = ft_memalloc(sizeof(t_list))) == NULL)
-					ft_error_errno("ft_memalloc", NULL);
-				p_list = p_list->next;
-			}
-			p_list->n_value = endian_swap_long(tab[i[0]].n_value);
-			p_list->type = get_type_64(&tab[i[0]], count_f);
-			p_list->ptr = (string + endian_swap(tab[i[0]].n_un.n_strx));
-			p_list->ptr = p_list->ptr;
-		}
-		i[0]++;
 	}
-	p_list = NULL;
-	list_display_64(h_list);
+	p_list[0] = NULL;
+	list_display_64(p_list[1]);
 }
 
 static inline	int			count_flag_64(t_count *count,

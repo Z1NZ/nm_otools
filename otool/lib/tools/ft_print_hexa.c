@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_print_hexa.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: srabah <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/20 19:34:42 by srabah            #+#    #+#             */
+/*   Updated: 2017/05/20 19:34:44 by srabah           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_otool.h"
 #include <unistd.h>
 
@@ -17,7 +29,7 @@ void			ft_print_hexa_32(unsigned long number)
 		number /= 16;
 		i++;
 	}
-	while(i < 8)
+	while (i < 8)
 	{
 		addr[i] = '0';
 		i++;
@@ -25,7 +37,6 @@ void			ft_print_hexa_32(unsigned long number)
 	while (--i > -1)
 		write(1, &addr[i], 1);
 }
-
 
 void			ft_print_hexa_64(unsigned long long number)
 {
@@ -43,7 +54,7 @@ void			ft_print_hexa_64(unsigned long long number)
 		number /= 16;
 		i++;
 	}
-	while(i < 16)
+	while (i < 16)
 	{
 		addr[i] = '0';
 		i++;
