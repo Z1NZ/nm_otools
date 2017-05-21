@@ -33,10 +33,10 @@ static inline unsigned int	endian_swap(unsigned int x)
 
 static int					section64(struct segment_command_64 *seg, t_file_info info)
 {
-	char		*ptr;
-	uint64_t	i;
-	uint64_t	j;
-	struct section_64 *sect;
+	char				*ptr;
+	uint64_t			i;
+	uint64_t			j;
+	struct section_64	*sect;
 
 	i = 0;
 	ptr = NULL;
@@ -52,9 +52,9 @@ static int					section64(struct segment_command_64 *seg, t_file_info info)
 			}
 			ft_putstr("Contents of (__TEXT,__text) section");
 			ptr = (char *)(info.data_file + endian_swap(sect->offset));
-			j =  endian_swap_long(sect->addr);
+			j = endian_swap_long(sect->addr);
 			i = 0;
-			while (i <  endian_swap_long(sect->size))
+			while (i < endian_swap_long(sect->size))
 			{
 				if ((i % 16) == 0)
 				{
@@ -86,7 +86,6 @@ int							ft_core_64_litle(t_file_info info)
 	uint32_t					i;
 	uint32_t					len;
 	t_count						count_f;
-
 
 	p_h = (void *)info.data_file;
 	i = 0;

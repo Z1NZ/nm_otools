@@ -14,7 +14,7 @@
 
 static inline unsigned int	endian_swap(unsigned int x)
 {
-	x = (x >> (unsigned int)24) | 
+	x = (x >> (unsigned int)24) |
 		((x << (unsigned int)8) & 0x00FF0000) |
 		((x >> (unsigned int)8) & 0x0000FF00) |
 		(x << (unsigned int)24);

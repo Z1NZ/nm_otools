@@ -15,14 +15,15 @@
 
 static inline unsigned int	endian_swap(unsigned int x)
 {
-	x = (x >> (unsigned int)24) | 
+	x = (x >> (unsigned int)24) |
 		((x << (unsigned int)8) & 0x00FF0000) |
 		((x >> (unsigned int)8) & 0x0000FF00) |
 		(x << (unsigned int)24);
 	return (x);
 }
 
-static int					section(struct segment_command *seg, t_file_info info)
+static int					section(struct segment_command *seg,
+	t_file_info info)
 {
 	char			*ptr;
 	uint32_t		i;
@@ -34,7 +35,7 @@ static int					section(struct segment_command *seg, t_file_info info)
 	sect = (void *)(seg + 1);
 	while (i < seg->nsects)
 	{
-		if (ft_strcmp(sect->sectname, SECT_TEXT) == 0 && ft_strcmp(sect->segname, SEG_TEXT) == 0)
+		if (!ft_strcmp(sect->sectname, SECT_TEXT) && !ft_strcmp(sect->segname, SEG_TEXT))
 		{
 			if (!info.fat)
 			{
@@ -88,7 +89,7 @@ int							ft_core_32_litle(t_file_info info)
 			ft_error_recognized(info.filename);
 			return (1);
 		}
-		if (endian_swap(p_lc->cmd)  == LC_SEGMENT)
+		if (endian_swap(p_lc->cmd) == LC_SEGMENT)
 			if ((section((void*)p_lc, info)) == 0)
 				return (0);
 		p_lc = (void *)(((char *)p_lc) + endian_swap(p_lc->cmdsize));

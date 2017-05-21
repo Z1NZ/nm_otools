@@ -15,20 +15,15 @@
 
 static int				section(struct segment_command *seg, t_file_info info)
 {
-	char			*ptr;
-	uint32_t		i;
-	uint32_t		j;
+	long			i;
+	long			j;
 	struct section	*sect;
-	uint32_t		size;
 
-	i = 0;
-	size = 0;
-	ptr = NULL;
+	i = -1;
 	sect = (void *)(seg + 1);
-	while (i < seg->nsects)
+	while (++i < seg->nsects)
 	{
-		if (ft_strcmp(sect->sectname, SECT_TEXT) == 0 &&
-			ft_strcmp(sect->segname, SEG_TEXT) == 0)
+		if (!ft_strcmp(sect->sectname, SECT_TEXT) && !ft_strcmp(sect->segname, SEG_TEXT))
 		{
 			if (!info.fat)
 			{
@@ -36,27 +31,24 @@ static int				section(struct segment_command *seg, t_file_info info)
 				ft_putstr(":\n");
 			}
 			ft_putstr("Contents of (__TEXT,__text) section");
-			ptr = (char *)(info.data_file + sect->offset);
-			i = 0;
+			i = -1;
 			j = sect->addr;
-			while (i < sect->size)
+			while (++i < sect->size)
 			{
 				if ((i % 16) == 0)
 				{
 					ft_putstr("\n");
-					ft_print_hexa_32(j);
+					ft_print_hexa_32((uint32_t)j);
 					ft_putstr("\t");
 					j += 16;
 				}
-				ft_print_hexa_uchar((unsigned char)ptr[i]);
+				ft_print_hexa_uchar((uint8_t)(info.data_file + sect->offset)[i]);
 				ft_putstr(" ");
-				i++;
 			}
 			ft_putstr("\n");
 			return (0);
 		}
 		sect = (void *)(sect + 1);
-		i++;
 	}
 	return (1);
 }

@@ -13,7 +13,7 @@
 #include "ft_otool.h"
 #include <unistd.h>
 #include <fcntl.h>
-#define ERROR_FILE ("error: ft_otool: at least one file must be specified\n"
+#define ERROR_FILE "error: ft_otool: at least one file must be specified\n"
 
 int		ft_openner(t_file_info info)
 {
