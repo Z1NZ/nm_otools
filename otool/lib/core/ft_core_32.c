@@ -13,41 +13,47 @@
 #include "ft_otool.h"
 #include <unistd.h>
 
+static int				put_sect(t_file_info info, struct section *sect)
+{
+	long	i;
+	long	j;
+
+	if (!info.fat)
+	{
+		ft_putstr(info.filename);
+		ft_putstr(":\n");
+	}
+	ft_putstr("Contents of (__TEXT,__text) section");
+	i = -1;
+	j = sect->addr;
+	while (++i < sect->size)
+	{
+		if ((i % 16) == 0)
+		{
+			ft_putstr("\n");
+			ft_print_hexa_32((uint32_t)j);
+			ft_putstr("\t");
+			j += 16;
+		}
+		ft_print_hexa_uchar((uint8_t)(info.data_file + sect->offset)[i]);
+		ft_putstr(" ");
+	}
+	ft_putstr("\n");
+	return (0);
+}
+
 static int				section(struct segment_command *seg, t_file_info info)
 {
 	long			i;
-	long			j;
 	struct section	*sect;
 
 	i = -1;
 	sect = (void *)(seg + 1);
 	while (++i < seg->nsects)
 	{
-		if (!ft_strcmp(sect->sectname, SECT_TEXT) && !ft_strcmp(sect->segname, SEG_TEXT))
-		{
-			if (!info.fat)
-			{
-				ft_putstr(info.filename);
-				ft_putstr(":\n");
-			}
-			ft_putstr("Contents of (__TEXT,__text) section");
-			i = -1;
-			j = sect->addr;
-			while (++i < sect->size)
-			{
-				if ((i % 16) == 0)
-				{
-					ft_putstr("\n");
-					ft_print_hexa_32((uint32_t)j);
-					ft_putstr("\t");
-					j += 16;
-				}
-				ft_print_hexa_uchar((uint8_t)(info.data_file + sect->offset)[i]);
-				ft_putstr(" ");
-			}
-			ft_putstr("\n");
-			return (0);
-		}
+		if (!ft_strcmp(sect->sectname, SECT_TEXT) &&
+			!ft_strcmp(sect->segname, SEG_TEXT))
+			return (put_sect(info, sect));
 		sect = (void *)(sect + 1);
 	}
 	return (1);
