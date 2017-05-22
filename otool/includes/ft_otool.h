@@ -80,7 +80,6 @@ void				ft_print_sub_arm(cpu_subtype_t sub);
 void				ft_print_sub_ppc(cpu_subtype_t sub);
 void				ft_print_arch(cpu_type_t type, cpu_subtype_t sub);
 int					ft_core_static_lib(t_file_info info);
-
 /*
 ** TOOLS
 */
@@ -100,7 +99,7 @@ char				*ft_strcpy(char *s1, const char *s2);
 char				*ft_strrev(char *str);
 void				*ft_memcpy(void *s1, const void *s2, size_t n);
 void				*reverse(char *ptr, size_t len);
-void				ft_error_recognized(const char *ptr);
+int					ft_error_recognized(const char *ptr);
 char				get_type(struct nlist *nl, t_count count_f);
 char				get_type_64(struct nlist_64 *nl, t_count count);
 int					ft_strcmp(char *s1, char *s2);

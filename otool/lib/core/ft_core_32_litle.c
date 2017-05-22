@@ -22,46 +22,58 @@ static inline unsigned int	endian_swap(unsigned int x)
 	return (x);
 }
 
+static void					hexa_sect(char *ptr, uint32_t i)
+{
+	ft_print_hexa_uchar((unsigned char)ptr[i]);
+	ft_print_hexa_uchar((unsigned char)ptr[i + 1]);
+	ft_print_hexa_uchar((unsigned char)ptr[i + 2]);
+	ft_print_hexa_uchar((unsigned char)ptr[i + 3]);
+	ft_putstr(" ");
+}
+
+static int					put_sect(t_file_info info, struct section *sect)
+{
+	uint32_t		i[2];
+	char			*ptr;
+
+	if (!info.fat)
+	{
+		ft_putstr(info.filename);
+		ft_putstr(":\n");
+	}
+	ft_putstr("Contents of (__TEXT,__text) section");
+	ptr = (char *)(info.data_file + endian_swap(sect->offset));
+	i[0] = 0;
+	i[1] = endian_swap(sect->addr);
+	while (i[0] < endian_swap(sect->size))
+	{
+		if ((i[0] % 16) == 0)
+		{
+			ft_putstr("\n");
+			ft_print_hexa_32(i[1]);
+			ft_putstr("\t");
+			i[1] += 16;
+		}
+		hexa_sect(ptr, i[0]);
+		i[0] += 4;
+	}
+	return (0);
+}
+
 static int					section(struct segment_command *seg,
 	t_file_info info)
 {
-	char			*ptr;
 	uint32_t		i;
-	uint32_t		j;
 	struct section	*sect;
 
 	i = 0;
-	ptr = NULL;
 	sect = (void *)(seg + 1);
 	while (i < seg->nsects)
 	{
-		if (!ft_strcmp(sect->sectname, SECT_TEXT) && !ft_strcmp(sect->segname, SEG_TEXT))
+		if (!ft_strcmp(sect->sectname, SECT_TEXT) &&
+			!ft_strcmp(sect->segname, SEG_TEXT))
 		{
-			if (!info.fat)
-			{
-				ft_putstr(info.filename);
-				ft_putstr(":\n");
-			}
-			ft_putstr("Contents of (__TEXT,__text) section");
-			ptr = (char *)(info.data_file + endian_swap(sect->offset));
-			i = 0;
-			j = endian_swap(sect->addr);
-			while (i < endian_swap(sect->size))
-			{
-				if ((i % 16) == 0)
-				{
-					ft_putstr("\n");
-					ft_print_hexa_32(j);
-					ft_putstr("\t");
-					j += 16;
-				}
-				ft_print_hexa_uchar((unsigned char)ptr[i]);
-				ft_print_hexa_uchar((unsigned char)ptr[i + 1]);
-				ft_print_hexa_uchar((unsigned char)ptr[i + 2]);
-				ft_print_hexa_uchar((unsigned char)ptr[i + 3]);
-				ft_putstr(" ");
-				i += 4;
-			}
+			put_sect(info, sect);
 			ft_putstr("\n");
 			return (0);
 		}

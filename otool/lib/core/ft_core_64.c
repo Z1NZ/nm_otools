@@ -14,43 +14,48 @@
 #include <unistd.h>
 #include <stdio.h>
 
-static int		section64(struct segment_command_64 *seg, t_file_info info)
+static void		put_sect(t_file_info info, struct section_64 *sect)
 {
 	char				*ptr;
+	uint64_t			i[2];
+
+	if (!info.fat)
+	{
+		ft_putstr(info.filename);
+		ft_putstr(":\n");
+	}
+	ft_putstr("Contents of (__TEXT,__text) section");
+	ptr = (char *)(info.data_file + sect->offset);
+	i[1] = sect->addr;
+	i[0] = 0;
+	while (i[0] < sect->size)
+	{
+		if ((i[0] % 16) == 0)
+		{
+			ft_putstr("\n");
+			ft_print_hexa_64(i[1]);
+			ft_putstr("\t");
+			i[1] += 16;
+		}
+		ft_print_hexa_uchar((unsigned char)ptr[i[0]]);
+		ft_putstr(" ");
+		i[0]++;
+	}
+}
+
+static int		section64(struct segment_command_64 *seg, t_file_info info)
+{
 	uint64_t			i;
-	uint64_t			j;
 	struct section_64	*sect;
 
 	i = 0;
-	ptr = NULL;
 	sect = (void *)(seg + 1);
 	while (i < seg->nsects)
 	{
-		if (ft_strcmp(sect->sectname, SECT_TEXT) == 0 &&
-				ft_strcmp(sect->segname, SEG_TEXT) == 0)
+		if (!ft_strcmp(sect->sectname, SECT_TEXT) &&
+			!ft_strcmp(sect->segname, SEG_TEXT))
 		{
-			if (!info.fat)
-			{
-				ft_putstr(info.filename);
-				ft_putstr(":\n");
-			}
-			ft_putstr("Contents of (__TEXT,__text) section");
-			ptr = (char *)(info.data_file + sect->offset);
-			j = sect->addr;
-			i = 0;
-			while (i < sect->size)
-			{
-				if ((i % 16) == 0)
-				{
-					ft_putstr("\n");
-					ft_print_hexa_64(j);
-					ft_putstr("\t");
-					j += 16;
-				}
-				ft_print_hexa_uchar((unsigned char)ptr[i]);
-				i++;
-				ft_putstr(" ");
-			}
+			put_sect(info, sect);
 			ft_putstr("\n");
 			return (0);
 		}

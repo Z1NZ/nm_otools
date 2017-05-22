@@ -26,28 +26,25 @@ int							ft_core_fat(t_file_info info)
 	struct fat_header	*p_fh;
 	struct fat_arch		*p_fa;
 	uint32_t			n_arch;
-	struct mach_header	*p_h;
+	struct mach_header	*p;
 
 	p_fh = (void *)info.data_file;
 	p_fa = (void *)(p_fh + 1);
-	n_arch = p_fh->nfat_arch;
+	n_arch = p_fh->nfat_arch + 1;
 	if (find_arch(info))
 		return (0);
 	info.fat = 1;
-	while (n_arch)
+	while (--n_arch)
 	{
 		info.data_file += p_fa->offset;
-		p_h = (void *)info.data_file;
+		p = (void *)info.data_file;
 		ft_putstr(info.filename);
-		if (p_h->magic == MH_CIGAM || p_h->magic == MH_CIGAM_64)
-			ft_print_arch((cpu_type_t)endian_swap((unsigned int)p_h->cputype),
-				(cpu_subtype_t)endian_swap((unsigned int)p_h->cpusubtype));
-		else
-			ft_print_arch(p_h->cputype, p_h->cpusubtype);
+		(p->magic == MH_CIGAM || p->magic == MH_CIGAM_64) ? ft_print_arch((int)
+			endian_swap((uint32_t)p->cputype), (int)endian_swap((uint32_t)
+				p->cpusubtype)) : ft_print_arch(p->cputype, p->cpusubtype);
 		ft_core(info);
 		info.data_file -= p_fa->offset;
 		++p_fa;
-		--n_arch;
 	}
 	info.fat = 0;
 	return (0);
