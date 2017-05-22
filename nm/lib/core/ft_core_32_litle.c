@@ -23,7 +23,7 @@ static inline unsigned int	endian_swap(unsigned int x)
 	return (x);
 }
 
-static void					ft_nlist(struct symtab_command *sc,
+static int					ft_nlist(struct symtab_command *sc,
 	t_count count_f, t_file_info info)
 {
 	struct nlist				*tab;
@@ -49,8 +49,9 @@ static void					ft_nlist(struct symtab_command *sc,
 			p_list[0]->ptr = p_list[0]->ptr;
 		}
 	}
-	p_list = NULL;
+	p_list[0] = NULL;
 	list_display(p_list[1]);
+	return (1);
 }
 
 static inline int			count_flag(t_count *count,

@@ -14,9 +14,12 @@
 
 void		print_lib(t_file_info info, t_llib *lib)
 {
+	info.fat = 1;
+	ft_putstr("Archive : ");
+	ft_putstr(info.filename);
+	ft_putstr("\n");
 	while (lib)
 	{
-		ft_putstr("\n");
 		ft_putstr(info.filename);
 		ft_putstr("(");
 		ft_putstr(lib->ptr);
@@ -26,4 +29,5 @@ void		print_lib(t_file_info info, t_llib *lib)
 		info.data_file -= lib->offset;
 		lib = lib->next;
 	}
+	info.fat = 0;
 }

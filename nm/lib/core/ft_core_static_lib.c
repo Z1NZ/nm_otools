@@ -88,11 +88,12 @@ int			ft_core_static_lib(t_file_info info)
 		rlib = (struct dylib_table_of_contents *)(void *)(symdef + 4);
 		if (((symdef + i) - info.data_file) > info.data_stat.st_size)
 			return (ft_error_recognized(info.filename));
-		while ((char *)rlib++ < (symdef + i))
+		while ((char *)rlib < (symdef + i))
 		{
 			info.data_file += rlib->module_index;
 			lib = ft_add_mod(info, lib, rlib->module_index);
 			info.data_file -= rlib->module_index;
+			rlib++;
 		}
 	}
 	return (ft_display_lib(info, lib));
