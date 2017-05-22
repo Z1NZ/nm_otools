@@ -31,15 +31,6 @@ static inline unsigned int	endian_swap(unsigned int x)
 	return (x);
 }
 
-static void					hexa_sect(char *ptr, uint64_t i)
-{
-	ft_print_hexa_uchar((unsigned char)ptr[i]);
-	ft_print_hexa_uchar((unsigned char)ptr[i + 1]);
-	ft_print_hexa_uchar((unsigned char)ptr[i + 2]);
-	ft_print_hexa_uchar((unsigned char)ptr[i + 3]);
-	ft_putstr(" ");
-}
-
 static void					put_sect(t_file_info info, struct section_64 *sect)
 {
 	char				*ptr;
@@ -64,7 +55,7 @@ static void					put_sect(t_file_info info, struct section_64 *sect)
 			ft_putstr("\t");
 			j += 16;
 		}
-		hexa_sect(ptr, i);
+		hexa_sect64(ptr, i);
 		i += 4;
 	}
 }

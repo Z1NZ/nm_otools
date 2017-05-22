@@ -58,7 +58,7 @@ t_llib			*ft_add_mod(t_file_info info, t_llib *lib, uint32_t len)
 	}
 }
 
-static int	ft_display_lib(t_file_info info, t_llib *lib)
+static int		ft_display_lib(t_file_info info, t_llib *lib)
 {
 	if (lib)
 	{
@@ -78,7 +78,6 @@ int				ft_core_static_lib(t_file_info info)
 	t_llib							*lib;
 
 	lib = NULL;
-	i = 0;
 	ptr = (void*)((char *)info.data_file + 8);
 	symdef = (char *)(ptr + 1);
 	if (ft_strcmp(symdef, SYMDEF_SORTED) == 0)
